@@ -1,0 +1,294 @@
+/*    font-family: "Playfair Display", serif;
+      font-family: "Poppins", sans-serif;        */
+
+
+/* VARIABLES GLOBALES */
+
+:root {
+    /* Color palette */
+    --black: #2E2E2E;
+    --orange: #FC4850;
+    --blue: #ADD6CF;
+    --yellow: #F2E1C2;
+    --brown: #BF6B04;
+
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+}
+
+h1,
+h2,
+h3 {
+    font-family: "Playfair Display", serif;
+    font-weight: bold;
+}
+
+img {
+    max-width: 100%;
+}
+
+/* NAVBAR */
+
+nav {
+    height: 12vh;
+    background-color: var(--orange);
+    font-family: "Poppins", sans-serif;
+    font-size: large;
+
+    a {
+        color: white !important;
+        font-size: large;
+
+        &:hover {
+            color: rgba(255, 255, 255, 0.51) !important;
+        }
+    }
+
+
+    .logo1 {
+        width: 7rem;
+        margin-top: 2%;
+    }
+
+    .show {
+        background: white;
+        border-radius: 20px;
+
+        a {
+            color: var(--orange) !important;
+        }
+    }
+
+}
+
+
+/* ACCUEIL */
+
+.mainAccueil {
+    background-color: var(--yellow);
+    margin-bottom: -15px;
+}
+
+.generator {
+    background: url(../img/accueil.jpg) center/cover;
+    height: 100vh;
+    margin-top: 10vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .card {
+        max-width: 50%;
+        min-height: 60vh;
+        background-color: var(--blue);
+        position: relative;
+        border-radius: 20px;
+
+        .people {
+
+            input[type="range"] {
+                -webkit-appearance: none;
+                appearance: none;
+                background: transparent;
+                cursor: pointer;
+                width: 12rem;
+            }
+
+            /* Removes default focus */
+            input[type="range"]:focus {
+                outline: none;
+            }
+
+            /***** Chrome, Safari, Opera and Edge Chromium styles *****/
+            /* slider track */
+            input[type="range"]::-webkit-slider-runnable-track {
+                background-color: #E7F1EF;
+                border-radius: 0.5rem;
+                height: 0.5rem;
+            }
+
+            /* slider thumb */
+            input[type="range"]::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                appearance: none;
+                margin-top: -4px;
+
+                /* Centers thumb on the track */
+
+                /*custom styles*/
+                background-color: var(--orange);
+                height: 1rem;
+                width: 1rem;
+                border-radius: 100%;
+            }
+
+            input[type="range"]:focus::-webkit-slider-thumb {
+                border: 1px solid #E7F1EF;
+                outline: 3px solid #E7F1EF;
+                outline-offset: 0.125rem;
+            }
+
+            /******** Firefox styles ********/
+            /* slider track */
+            input[type="range"]::-moz-range-track {
+                background-color: #E7F1EF;
+                border-radius: 0.5rem;
+                height: 0.5rem;
+            }
+
+            /* slider thumb */
+            input[type="range"]::-moz-range-thumb {
+                border: none;
+                /*Removes extra border that FF applies*/
+
+                /*custom styles*/
+                background-color: var(--orange);
+                height: 1rem;
+                width: 1rem;
+                border-radius: 100%;
+            }
+
+            input[type="range"]:focus::-moz-range-thumb {
+                border: 1px solid #E7F1EF;
+                outline: 3px solid #E7F1EF;
+                outline-offset: 0.125rem;
+            }
+        }
+
+        .time {
+            label:hover {
+                cursor: pointer;
+            }
+
+            input[type="checkbox"] {
+                visibility: hidden;
+            }
+
+            input[type="checkbox"]:checked+.label i {
+                color: var(--orange);
+            }
+        }
+
+        .price {
+            label:hover {
+                cursor: pointer;
+            }
+
+            input[type="checkbox"] {
+                visibility: hidden;
+            }
+
+            input[type="checkbox"]:checked+.label i {
+                color: var(--orange);
+            }
+        }
+
+        .repas {
+            input[type="checkbox"] {
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                -ms-appearance: none;
+
+            }
+            input[type="checkbox"]:checked {
+                background: var(--orange);
+                }
+        }
+
+        .btnOptions {
+            position: relative;
+
+            .bi-arrow-right-square {
+                position: absolute;
+                top: 2px;
+                right: -20px;
+                font-size: 1.5rem;
+            }
+        }
+
+        .options {
+            display: none;
+
+
+            input[type=checkbox] {
+                display: none;
+            }
+
+            .label {
+                border-radius: 5px;
+                display: inline-block;
+                padding: 3px;
+                transition: 0.5s;
+                background-color: #E7F1EF;
+                cursor: pointer;
+            }
+
+            input[type=checkbox]:checked+.label {
+                background: var(--orange);
+                color: #fff;
+            }
+        }
+
+        .show {
+            display: block;
+        }
+
+        input[type="submit"] {
+            background-color: var(--orange);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: -20px;
+
+        }
+
+    }
+}
+
+.presentation {
+    padding: 100px 0;
+}
+
+
+
+
+
+
+
+
+
+
+/* FOOTER */
+
+footer {
+    height: 30vh;
+    background-color: var(--orange);
+    display: flex;
+    color: white;
+
+    .logo2 {
+        width: 20rem;
+        margin-top: -80px;
+    }
+
+    a {
+        color: white;
+        font-size: large;
+
+        &:hover {
+            color: rgba(255, 255, 255, 0.51);
+        }
+    }
+
+}
