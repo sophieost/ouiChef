@@ -10,7 +10,7 @@
     --orange: #FC4850;
     --blue: #ADD6CF;
     --yellow: #F2E1C2;
-    --brown: #BF6B04;
+    --brown: #e1881b;
 
 }
 
@@ -76,7 +76,7 @@ nav {
 
 .generator {
     background: url(../img/accueil.jpg) center/cover;
-    height: 100vh;
+    min-height: 100vh;
     margin-top: 10vh;
     display: flex;
     flex-direction: column;
@@ -190,15 +190,9 @@ nav {
         }
 
         .repas {
-            input[type="checkbox"] {
-                -webkit-appearance: none;
-                -moz-appearance: none;
-                -ms-appearance: none;
-
-            }
             input[type="checkbox"]:checked {
-                background: var(--orange);
-                }
+                background-color: var(--orange);
+            }
         }
 
         .btnOptions {
@@ -261,8 +255,256 @@ nav {
 }
 
 
+/*   IDENTIFICATION   */
+
+#inscription {
+    background-color: var(--yellow);
+
+    input {
+        background-color: var(--yellow);
+    }
+
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active {
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: var(--black);
+    }
+}
+
+#connexion {
+    background-color: var(--blue);
+
+    input {
+        background-color: var(--blue);
+    }
+
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active {
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: var(--black);
+    }
+}
+
+#inscription,
+#connexion {
+
+    p {
+        margin-top: 30px;
+    }
+
+    .champs {
+        position: relative;
+        margin-bottom: 1.25em;
+
+        input {
+            border: 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.264);
+            outline: none;
+        }
+
+        label {
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: var(--black);
+            display: flex;
+            align-items: center;
+            cursor: text;
+            transition: .3s ease-in-out;
+        }
+
+        i:hover {
+            cursor: pointer;
+        }
+
+        input,
+        label {
+            font-size: 1em;
+            width: 90%;
+            height: 55px;
+        }
+
+        input:focus+label {
+            color: var(--black);
+            font-size: .75em;
+            top: -25px;
+            pointer-events: none;
+        }
+
+        input:focus {
+            border-bottom: 1px solid var(--black);
+        }
+
+    }
+
+    button {
+        background-color: var(--orange) !important;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+    }
+
+    .showPassIdCon {
+        label:hover {
+            cursor: pointer;
+        }
+
+        input[type="checkbox"] {
+            /* visibility: hidden; */
+            display: none;
+        }
+    }
+
+}
+
+/*   BACK-OFFICE */
+
+#users{
+
+    button:hover{
+        background-color: #add6cfae;
+        color: white;
+    }
+
+    th, tr, td{
+        background-color: var(--blue) !important;
+    }
+}
+
+#recipeTable{
+
+    max-width: 100%;
+    overflow-x: auto;
+    transition: 0.5s ease-in-out;
+
+    th, tr, td{
+        background-color: var(--blue) !important;
+    }
+}
+
+.btnAdd{
+    background-color: white;
+    color: var(--black);
+    border: none;
+    
+    &:hover{
+        background-color: var(--yellow);
+        color: var(--black);
+    }
+}
 
 
+
+
+
+
+
+/*   PROFIL UTILISATEUR  */
+
+#profil, #dashboard {
+
+    background-color: var(--blue);
+
+
+    .avatar-img {
+        width: 200px;
+        height: 200px;
+        border: 1px solid var(--black);
+        border-radius: 100%;
+
+
+    }
+
+    .submitImg {
+        padding: 3px 5px;
+        border: none;
+        background-color: transparent;
+        color: var(--orange);
+    }
+
+.onglets{
+    transition: 1s ease-in-out;
+    .onglet {
+        background-color: var(--orange);
+        margin: 50px;
+        padding: 10px 20px;
+        text-align: center;
+        border-radius: 5px;
+        &:hover{
+            transform: scale(1.05);
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+            
+        }
+    }
+}
+
+    
+
+}
+
+.informations {
+    
+    .champs {
+        position: relative;
+        margin-bottom: 1.25em;
+
+        input {
+            border: 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.264);
+            outline: none;
+        }
+
+        label {
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: var(--black);
+            display: flex;
+            align-items: center;
+            cursor: text;
+            transition: .3s ease-in-out;
+        }
+
+        i:hover {
+            cursor: pointer;
+        }
+
+        input,
+        label {
+            font-size: 1em;
+            width: 90%;
+            height: 55px;
+        }
+
+        input:focus+label {
+            color: var(--black);
+            font-size: .75em;
+            top: -25px;
+            pointer-events: none;
+        }
+
+        input:focus {
+            border-bottom: 1px solid var(--black);
+        }
+
+        p{
+            font-size: 10px;
+        }
+    }
+    button{
+        background-color: var(--yellow);
+        color: var(--black);
+    }
+}
 
 
 
@@ -272,7 +514,7 @@ nav {
 /* FOOTER */
 
 footer {
-    height: 30vh;
+    min-height: 30vh;
     background-color: var(--orange);
     display: flex;
     color: white;
@@ -291,4 +533,12 @@ footer {
         }
     }
 
+    @media screen and (max-width: 768px) {
+
+        .logo2 {
+            width: 10rem;
+        }
+
+
+    }
 }

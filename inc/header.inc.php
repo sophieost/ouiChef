@@ -64,9 +64,9 @@ logOut();
                         <?php } else { ?>
                             <li class="nav-item"><a class="nav-link" href="<?= RACINE_SITE ?>profil.php"><i class="bi bi-person-circle"></i></a></li>
 
-                            <?php if ($_SESSION['user']['role'] == 'ROLE_ADMIN') { ?>
+                            <?php if ($_SESSION['user']['role'] == 'admin') { ?>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="<?= RACINE_SITE ?>admin/dashboard.php?dashboard_php">Backoffice</a>
+                                    <a class="nav-link" href="<?= RACINE_SITE ?>admin/dashboard.php">Backoffice</a>
                                 </li>
 
                             <?php } 

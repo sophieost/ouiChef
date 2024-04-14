@@ -1,8 +1,8 @@
 <footer>
 
-    <div class="container row justify-content-between mx-auto">
+    <div class="container row justify-content-between mx-auto py-5">
 
-        <div class="col-6 mt-3">
+        <div class="col-6 pt-3">
             <div class="infos">
                 <h3>INFOS</h3>
                 <ul class="list-unstyled">
