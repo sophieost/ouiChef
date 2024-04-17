@@ -7,10 +7,10 @@
 :root {
     /* Color palette */
     --black: #2E2E2E;
-    --orange: #FC4850;
-    --blue: #ADD6CF;
+    --orange: #fc4851;
+    --blue: #add6cf;
     --yellow: #F2E1C2;
-    --brown: #e1881b;
+    --white: #fffdfb;
 
 }
 
@@ -56,7 +56,7 @@ nav {
     }
 
     .show {
-        background: white;
+        background: var(--white);
         border-radius: 20px;
 
         a {
@@ -86,9 +86,10 @@ nav {
     .card {
         max-width: 50%;
         min-height: 60vh;
-        background-color: var(--blue);
+        background-color: #add6cfb5;
         position: relative;
         border-radius: 20px;
+        border: none;
 
         .people {
 
@@ -374,6 +375,11 @@ nav {
     th, tr, td{
         background-color: var(--blue) !important;
     }
+
+    .btnRole{
+        background-color: var(--orange);
+        color: white;
+    }
 }
 
 #recipeTable{
@@ -385,6 +391,19 @@ nav {
     th, tr, td{
         background-color: var(--blue) !important;
     }
+}
+#users,
+#recipeTable,
+#categoriesTable, 
+#ingredientsTable{
+    
+        .bi-pen-fill{
+            color: #2e2e2ec2;
+        }
+        .bi-trash-fill{
+            color: var(--orange);
+        }
+    
 }
 
 .btnAdd{
@@ -398,6 +417,21 @@ nav {
     }
 }
 
+#gestionRecipes{
+    background-color: var(--blue) !important;
+
+    h2{
+       margin-top: 100px;
+
+    }
+}
+
+#ingredientsContainer{
+    background-color: var(--blue) !important;
+    input{
+        background-color: var(--blue) !important;
+    }
+}
 
 
 
@@ -507,7 +541,13 @@ nav {
 }
 
 
+/*   LES RECETTES */
 
+#lesRecettes{
+    background-color: var(--yellow);
+    padding-top: 10%;
+    min-height: 100vh;
+}
 
 
 

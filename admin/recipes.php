@@ -10,6 +10,15 @@ if (!isset($_SESSION['user'])) {
     }
 }
 
+if (isset($_GET['action']) && isset($_GET['id'])) {
+    if (!empty($_GET['action']) && $_GET['action'] == 'delete' && !empty($_GET['id'])) {
+
+        $idRecipe = $_GET['id'];
+        $recipe = deleteRecipe($idRecipe);
+    }
+}
+
+
 
 $title = "Recettes";
 
@@ -21,7 +30,7 @@ $title = "Recettes";
 
         <h2 class="text-center fw-bolder mb-5 text-dark">Liste des recettes</h2>
         <a href="gestionRecipes.php" class="btn btn-sm p-3 fs-5 align-self-center btnAdd"> Ajouter une recette</a>
-        <table class="table table-bordered border-dark mt-5 container">
+        <table class="table table-striped border-dark mt-5 container">
             <thead>
                 <tr>
                     <!-- th*7 -->
@@ -69,7 +78,7 @@ $title = "Recettes";
 
                         <td><?= isset($recipe['ingredients']) ? ucfirst($recipe['ingredients']) : "" ?></td>
                         
-                        <td class="text-center"><a href="gestionRecipes.php?action=delete&id=<?= $recipe['id'] ?>"><i class="bi bi-trash3-fill text-danger"></i></a></td>
+                        <td class="text-center"><a href="recipes.php?action=delete&id=<?= $recipe['id'] ?>"><i class="bi bi-trash-fill"></i></a></td>
 
                         <td class="text-center"><a href="gestionRecipes.php?action=update&id=<?= $recipe['id'] ?>"><i class="bi bi-pen-fill"></i></a></td>
 

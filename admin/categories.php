@@ -96,7 +96,7 @@ $title = "Catégories";
     </div>
 
 
-    <div class="col-sm-12 col-md-5 m-5">
+    <div class="col-sm-12 col-md-5 m-5" id="categoriesTable">
         <h2 class="text-center fw-bolder mb-5">Liste des catégories</h2>
         <table class="table table-bordered mt-5">
             <thead>
@@ -119,7 +119,7 @@ $title = "Catégories";
                     <tr>
                         <td><?= $category['id'] ?></td>
                         <td><?= ucfirst($category['name']) ?></td>
-                        <td class="text-center"><a href="?categories_php&action=delete&idy=<?= $category['id'] ?>"><i class="bi bi-trash3-fill text-danger"></i></td>
+                        <td class="text-center"><a href="?categories_php&action=delete&idy=<?= $category['id'] ?>"><i class="bi bi-trash-fill"></i></td>
                         <td class="text-center"><a href="?categories_php&action=update&id=<?= $category['id'] ?>"><i class="bi bi-pen-fill"></i></a></td>
                     </tr>
 

@@ -96,7 +96,7 @@ $title = "Ingrédients";
     </div>
 
 
-    <div class="col-sm-12 col-md-5 m-5">
+    <div class="col-sm-12 col-md-5 m-5" id="ingredientsTable">
         <h2 class="text-center fw-bolder mb-5">Liste des ingrédients</h2>
         <table class="table table-bordered mt-5">
             <thead>

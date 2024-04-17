@@ -267,14 +267,14 @@ function allRecipes(): array
 
 //   POUR AJOUTER UNE RECETTE
 
-function addRecipe(string $name, string $slug, string $image, string $instructions, string $repas, string $plat, string $season, string $price, string $time): void
+function addRecipe(string $name, string $slug, string $image, string $instructions, string $repas, string $plat, string $season, float $price, int $time, array $categories, array $ingredients): bool
 {
     $pdo = connexionBdd();
 
+    // Ajoute une nouvelle recette
     $sql = "INSERT INTO recipes (name, slug, image, instructions, repas, plat, season, price, time) VALUES (:name, :slug, :image, :instructions, :repas, :plat, :season, :price, :time)";
-
     $request = $pdo->prepare($sql);
-    $request->execute([
+    $result = $request->execute(array(
         ':name' => $name,
         ':slug' => $slug,
         ':image' => $image,
@@ -284,32 +284,64 @@ function addRecipe(string $name, string $slug, string $image, string $instructio
         ':season' => $season,
         ':price' => $price,
         ':time' => $time
-    ]);
+    ));
+
+    if ($result) {
+        $id = $pdo->lastInsertId();
+
+        // Ajoute une association dans la table recipe_category
+        foreach ($categories as $category) {
+            $sql = "INSERT INTO recipe_category (recipe_id, category_id) VALUES (:id, :category_id)";
+            $request = $pdo->prepare($sql);
+            $request->execute(array(
+                ':id' => $id, 
+                ':category_id' => $category
+            ));
+        }
+
+        // Ajoute une association dans la table recipe_ingredients
+        foreach ($ingredients as $ingredient) {
+            $sql = "INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unité) VALUES (:id, :ingredient_id, :quantity, :unité)";
+            $request = $pdo->prepare($sql);
+            $request->execute(array(':id' => $id, ':ingredient_id' => $ingredient['id'], ':quantity' => $ingredient['quantity'], ':unité' => $ingredient['unité']));
+        }
+    }
+
+    return $result;
 }
 
 //   POUR SUPPRIMER UNE RECETTE
-
-function deleteRecipe(int $id): void
+function deleteRecipe(int $id): bool
 {
     $pdo = connexionBdd();
 
+    // Suprime une association dans la table recipe_category
+    $sql = "DELETE FROM recipe_category WHERE recipe_id = :id";
+    $request = $pdo->prepare($sql);
+    $request->execute(array(':id' => $id));
+
+    // Suprime une association dans la table recipe_ingredients
+    $sql = "DELETE FROM recipe_ingredients WHERE recipe_id = :id";
+    $request = $pdo->prepare($sql);
+    $request->execute(array(':id' => $id));
+
+    // Supprime la recette
     $sql = "DELETE FROM recipes WHERE id = :id";
     $request = $pdo->prepare($sql);
-    $request->execute([':id' => $id]);
-}
+    $result = $request->execute(array(':id' => $id));
 
+    return $result;
+}
 //   POUR MODIFIER UNE RECETTE
 
 
-function updateRecipe(int $id_recipe, string $name, string $slug, string $image, string $instructions, string $repas, string $plat, string $season, string $price, string $time): void
+function updateRecipe(int $id, string $name, string $slug, string $image, string $instructions, string $repas, string $plat, string $season, float $price, int $time, array $categories, array $ingredients): bool
 {
     $pdo = connexionBdd();
-
-    $sql = "UPDATE recipes SET name = :name, slug = :slug, image = :image, instructions = :instructions, repas = :repas, plat = :plat, season = :season, price = :price, time = :time WHERE id = :id ";
-
+    $sql = "UPDATE recipes SET name = :name, slug = :slug, image = :image, instructions = :instructions, repas = :repas, plat = :plat, season = :season, price = :price, time = :time WHERE id = :id";
     $request = $pdo->prepare($sql);
-    $request->execute([
-        ':id' => $id_recipe,
+    $result = $request->execute(array(
+        ':id' => $id,
         ':name' => $name,
         ':slug' => $slug,
         ':image' => $image,
@@ -319,12 +351,100 @@ function updateRecipe(int $id_recipe, string $name, string $slug, string $image,
         ':season' => $season,
         ':price' => $price,
         ':time' => $time
-    ]);
+    ));
+
+    if ($result) {
+        // Update categories
+        $sql = "DELETE FROM recipe_category WHERE recipe_id = :id";
+        $request = $pdo->prepare($sql);
+        $request->execute(array(':id' => $id));
+
+        foreach ($categories as $category) {
+            $sql = "INSERT INTO recipe_category (recipe_id, category_id) VALUES (:id, :category_id)";
+            $request = $pdo->prepare($sql);
+            $request->execute(array(':id' => $id, ':category_id' => $category));
+        }
+
+        // Update ingredients
+        $sql = "DELETE FROM recipe_ingredients WHERE recipe_id = :id";
+        $request = $pdo->prepare($sql);
+        $request->execute(array(':id' => $id));
+
+        foreach ($ingredients as $ingredient) {
+            $sql = "INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unité) VALUES (:id, :ingredient_id, :quantity, :unité)";
+            $request = $pdo->prepare($sql);
+            $request->execute(array(':id' => $id, ':ingredient_id' => $ingredient['id'], ':quantity' => $ingredient['quantity'], ':unité' => $ingredient['unité']));
+        }
+    }
+
+    return $result;
 }
 
 //   AFFICHER UNE RECETTE
 
+function showRecipe(int $id): mixed
+{
+    $pdo = connexionBdd();
+    $sql = "SELECT r.id, r.name, r.slug, r.image, r.instructions, r.repas, r.plat, r.season, r.price, r.time,
+    GROUP_CONCAT(DISTINCT cat.name ORDER BY cat.name ASC SEPARATOR ', ') AS categories,
+    GROUP_CONCAT(DISTINCT CONCAT(ing.name, ' : ', ri.quantity, ' ', ri.unité) ORDER BY ing.name ASC SEPARATOR ', ') AS ingredients
+    FROM recipes r
+    LEFT JOIN recipe_category rc ON r.id = rc.recipe_id
+    LEFT JOIN categories cat ON rc.category_id = cat.id
+    LEFT JOIN recipe_ingredients ri ON r.id = ri.recipe_id
+    LEFT JOIN ingredients ing ON ri.ingredient_id = ing.id
+    WHERE r.id = :id
+    GROUP BY r.id";
+    $request = $pdo->prepare($sql);
+    $request->execute(array(
+        ':id' => $id
+    ));
 
+    $result = $request->fetch();
+    return $result;
+}
+
+
+
+//   POUR RECUPERER TOUS LES INGREDIENTS D'UNE RECETTE
+
+
+function showIngredientsRecipe(int $id): mixed
+{
+    $pdo = connexionBdd();
+    $sql = "SELECT recipe_ingredients.*, ingredients.name AS ingredient
+    FROM recipe_ingredients
+    LEFT JOIN ingredients
+    ON recipe_ingredients.ingredient_id = ingredients.id
+    WHERE recipe_id = :id ";
+    $request = $pdo->prepare($sql);
+    $request->execute(array(
+        ':id' => $id
+    ));
+
+    $result = $request->fetchAll();
+    return $result;
+}
+
+
+//   POUR RECUPERER LES CATEGORIES D'UNE RECETTE
+
+function showCategoriesRecipe(int $id): mixed
+{
+    $pdo = connexionBdd();
+    $sql = "SELECT recipe_category.*, categories.name AS name
+    FROM recipe_category
+    LEFT JOIN categories
+    ON recipe_category.category_id = categories.id
+    WHERE recipe_id = :id ";
+    $request = $pdo->prepare($sql);
+    $request->execute(array(
+        ':id' => $id
+    ));
+
+    $result = $request->fetchAll();
+    return $result;
+}
 
 
 // **********************************************************************************
@@ -443,5 +563,66 @@ function showIngredient(int $id): mixed
     ));
 
     $result = $request->fetch();
+    return $result;
+}
+
+
+// *********************************************************************
+
+//   FONCTION POUR RECUPERER LES RECETTES PAR PRIX
+
+function recipesByPrice(string $price): array
+{
+    $pdo = connexionBdd();
+    $sql = "SELECT * FROM recipes WHERE price = :price";
+    $request = $pdo->prepare($sql);
+    $request->execute(array(':price' => $price));
+
+    $result = $request->fetchAll();
+    return $result;
+}
+
+//   FONCTION POUR RECUPERER LES RECETTES PAR TEMPS DE PREPARATION
+
+function recipesByTime(string $time): array
+{
+    $pdo = connexionBdd();
+    $sql = "SELECT * FROM recipes WHERE time = :time";
+    $request = $pdo->prepare($sql);
+    $request->execute(array(':time' => $time));
+
+    $result = $request->fetchAll();
+    return $result;
+}
+
+//   FONCTION POUR RECUPERER LES RECETTES PAR CATEGORIE
+
+
+
+//   FONCTION POUR RECUPERER LES RECETTES PAR SAISON
+
+
+function recipesBySeason(string $season): array
+{
+    $pdo = connexionBdd();
+    $sql = "SELECT * FROM recipes WHERE season = :season";
+    $request = $pdo->prepare($sql);
+    $request->execute(array(':season' => $season));
+
+    $result = $request->fetchAll();
+    return $result;
+}
+
+//   FONCTION POUR RECUPERER LES RECETTES PAR TYPE DE PLAT
+
+
+function recipesByPlat(string $plat): array
+{
+    $pdo = connexionBdd();
+    $sql = "SELECT * FROM recipes WHERE plat = :plat";
+    $request = $pdo->prepare($sql);
+    $request->execute(array(':plat' => $plat));
+
+    $result = $request->fetchAll();
     return $result;
 }

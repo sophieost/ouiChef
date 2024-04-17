@@ -53,7 +53,7 @@ logOut();
                             <a class="nav-link" href="#">Ma liste de courses</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Les recettes</a>
+                            <a class="nav-link" href="<?= RACINE_SITE ?>recettes.php">Les recettes</a>
                         </li>
                     </ul>
                     

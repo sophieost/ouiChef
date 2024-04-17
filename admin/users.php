@@ -18,9 +18,8 @@ require_once "../inc/header.inc.php";
                 <th scope="col">ID</th>
                 <th scope="col">Pseudo</th>
                 <th scope="col">Email</th>
-                <th scope="col">Rôle</th>
                 <th scope="col">Supprimer</th>
-                <th scope="col">Modifier le rôle</th>
+                <th scope="col">Rôle</th>
             </tr>
         </thead>
         <tbody class="table-group-divider">
@@ -37,14 +36,15 @@ require_once "../inc/header.inc.php";
                     <th scope="row"><?= $user['id'] ?></th>
                     <td><?= $user['pseudo'] ?></td>
                     <td><?= $user['email'] ?></td>
-                    <td><?= $user['role'] ?></td>
 
-                    <td class="text-center">
-                        <a href="dashboard.php?users_php&action=delete&id=<?= $user['id'] ?>"><i class="bi bi-trash3-fill text-danger"></i></a>
+                    <td>
+                        <a href="dashboard.php?users_php&action=delete&id=<?= $user['id'] ?>"><i class="bi bi-trash-fill"></i></a>
                     </td>
 
-                    <td class="text-center">
-                        <a href="dashboard.php?users_php&action=update&id=<?= $user['id'] ?>" class="btn btn-danger"><?= ($user['role']) == 'admin' ? 'Rôle user' : 'Rôle admin' ?>
+                    <td>
+                        <a href="dashboard.php?users_php&action=update&id=<?= $user['id'] ?>" class="btn btnRole me-5">modifier</a>
+                        <?= ($user['role']) == 'admin' ? 'Rôle admin' : 'Rôle user' ?>
+                        
                     </td>
                 </tr>
 
