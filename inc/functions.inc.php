@@ -304,135 +304,126 @@ function allRecipes(): array
 
 
 
-function addRecipe($name, $slug, $image, $instructions, $repas, $typePlat, $season, $price, $time, $categories, $ingredients)
+function addRecipe(string $name, string $slug, string $image, string $instructions, string $repas, string $typePlat, string $season, string $price, string $time, array $categories, array $ingredients): void
 {
     $pdo = connexionBdd();
 
     $sql = "INSERT INTO recipes (name, slug, image, instructions, repas, typePlat, season, price, time) VALUES (:name, :slug, :image, :instructions, :repas, :typePlat, :season, :price, :time)";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':name', $name);
-    $stmt->bindParam(':slug', $slug);
-    $stmt->bindParam(':image', $image);
-    $stmt->bindParam(':instructions', $instructions);
-    $stmt->bindParam(':repas', $repas);
-    $stmt->bindParam(':typePlat', $typePlat);
-    $stmt->bindParam(':season', $season);
-    $stmt->bindParam(':price', $price);
-    $stmt->bindParam(':time', $time);
-    $stmt->execute();
+
+    $request = $pdo->prepare($sql);
+    $request->execute(array(
+        ':name' => $name,
+        ':slug' => $slug,
+        ':image' => $image,
+        ':instructions' => $instructions,
+        ':repas' => $repas,
+        ':typePlat' => $typePlat,
+        ':season' => $season,
+        ':price' => $price,
+        ':time' => $time
+    ));
+
 
     $recipeId = $pdo->lastInsertId();
 
     // Ajout des catégories
-    $categoryIds = explode(',', $categories);
-    foreach ($categoryIds as $categoryId) {
+    foreach ($categories as $categoryId) {
         $sql = "INSERT INTO recipe_category (recipe_id, category_id) VALUES (:recipeId, :categoryId)";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':recipeId', $recipeId);
-        $stmt->bindParam(':categoryId', $categoryId);
-        $stmt->execute();
+        $request = $pdo->prepare($sql);
+        $request->execute(array(
+            ':recipeId' => $recipeId,
+            ':categoryId' => $categoryId
+        ));
     }
 
     // Ajout des ingrédients
-    $ingredientData = explode(',', $ingredients);
-    foreach ($ingredientData as $ingredientInfo) {
-        list($ingredientId, $quantity, $unity) = explode(':', $ingredientInfo);
-        $sql = "INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unity) VALUES (:recipeId, :ingredientId, :quantity, :unity)";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':recipeId', $recipeId);
-        $stmt->bindParam(':ingredientId', $ingredientId);
-        $stmt->bindParam(':quantity', $quantity);
-        $stmt->bindParam(':unity', $unity);
-        $stmt->execute();
+    foreach ($ingredients as $ingredientId => $ingredientInfo) {
+
+        if (isset($ingredientInfo['checked'])) {
+
+            $quantity = floatval($ingredientInfo['quantity']);
+            $unity = $ingredientInfo['unity'];
+
+            $sql = "INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unity) VALUES (:recipeId, :ingredientId, :quantity, :unity)";
+
+            $request = $pdo->prepare($sql);
+            $request->execute(array(
+                ':recipeId' => $recipeId,
+                ':ingredientId' => $ingredientId,
+                ':quantity' => $quantity,
+                ':unity' => $unity
+            ));
+        }
     }
 }
 
 
 
-function updateRecipe($id, $name, $slug, $image, $instructions, $repas, $typePlat, $season, $price, $time, $categories, $ingredients)
+function updateRecipe(int $id, string $name, string $slug, string $image, string $instructions, string $repas, string $typePlat, string $season, string $price, string $time, array $categories, array $ingredients): void
 {
     $pdo = connexionBdd();
 
     $sql = "UPDATE recipes SET name=:name, slug=:slug, image=:image, instructions=:instructions, repas=:repas, typePlat=:typePlat, season=:season, price=:price, time=:time WHERE id=:id";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':id', $id);
-    $stmt->bindParam(':name', $name);
-    $stmt->bindParam(':slug', $slug);
-    $stmt->bindParam(':image', $image);
-    $stmt->bindParam(':instructions', $instructions);
-    $stmt->bindParam(':repas', $repas);
-    $stmt->bindParam(':typePlat', $typePlat);
-    $stmt->bindParam(':season', $season);
-    $stmt->bindParam(':price', $price);
-    $stmt->bindParam(':time', $time);
-    $stmt->execute();
+
+    $request = $pdo->prepare($sql);
+    $request->execute(array(
+        ':id' => $id,
+        ':name' => $name,
+        ':slug' => $slug,
+        ':image' => $image,
+        ':instructions' => $instructions,
+        ':repas' => $repas,
+        ':typePlat' => $typePlat,
+        ':season' => $season,
+        ':price' => $price,
+        ':time' => $time
+    ));
 
     // Suppression des anciennes catégories et ingrédients
     $sql = "DELETE FROM recipe_category WHERE recipe_id=:id";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':id', $id);
-    $stmt->execute();
+
+    $request = $pdo->prepare($sql);
+    $request->bindParam(':id', $id);
+    $request->execute();
 
     $sql = "DELETE FROM recipe_ingredients WHERE recipe_id=:id";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':id', $id);
-    $stmt->execute();
+
+    $request = $pdo->prepare($sql);
+    $request->bindParam(':id', $id);
+    $request->execute();
 
     // Ajout des nouvelles catégories
-    $categoryIds = explode(',', $categories);
-    foreach ($categoryIds as $categoryId) {
+    foreach ($categories as $categoryId) {
+
         $sql = "INSERT INTO recipe_category (recipe_id, category_id) VALUES (:recipeId, :categoryId)";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':recipeId', $id);
-        $stmt->bindParam(':categoryId', $categoryId);
-        $stmt->execute();
+
+        $request = $pdo->prepare($sql);
+        $request->execute(array(
+            ':recipeId' => $id,
+            ':categoryId' => $categoryId
+        ));
     }
 
     // Ajout des nouvelles ingrédients
-    $ingredientData = explode(',', $ingredients);
-    foreach ($ingredientData as $ingredientInfo) {
-        list($ingredientId, $quantity, $unity) = explode(':', $ingredientInfo);
-        $sql = "INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unity) VALUES (:recipeId, :ingredientId, :quantity, :unity)";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':recipeId', $id);
-        $stmt->bindParam(':ingredientId', $ingredientId);
-        $stmt->bindParam(':quantity', $quantity);
-        $stmt->bindParam(':unity', $unity);
-        $stmt->execute();
+    foreach ($ingredients as $ingredientId => $ingredientInfo) {
+
+        if (isset($ingredientInfo['checked'])) {
+
+            $quantity = floatval($ingredientInfo['quantity']);
+            $unity = $ingredientInfo['unity'];
+
+            $sql = "INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unity) VALUES (:recipeId, :ingredientId, :quantity, :unity)";
+
+            $request = $pdo->prepare($sql);
+            $request->execute(array(
+                ':recipeId' => $id,
+                ':ingredientId' => $ingredientId,
+                ':quantity' => $quantity,
+                ':unity' => $unity
+            ));
+        }
     }
 }
-
-
-//   AJOUTER LA RELATION RECETTE/CATEGORIES DANS LA TABLE RECIPE_CATEGORIES
-
-// function addRecipeCategories(int $recipe_id, int $category_id): void
-// {
-//     $pdo = connexionBdd();
-//     $sql = "INSERT INTO recipe_category (recipe_id, category_id) VALUES (:id, :category_id)";
-//     $request = $pdo->prepare($sql);
-//     $request->execute(array(
-//         ':id' => $recipe_id,
-//         ':category_id' => $category_id
-//     ));
-// }
-
-
-
-//   AJOUTER LA RELATION RECETTE/INGREDIENTS DANS LA TABLE RECIPE_INGREDIENTS
-
-// function addRecipeIngredients(int $recipe_id, int $ingredient_id, float $quantity, string $unity): void
-// {
-//     $pdo = connexionBdd();
-//     $sql = "INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unity) VALUES (:id, :ingredient_id, :quantity, :unity)";
-//     $request = $pdo->prepare($sql);
-//     $request->execute(array(
-//         ':id' => $recipe_id,
-//         ':ingredient_id' => $ingredient_id,
-//         ':quantity' => $quantity,
-//         ':unity' => $unity
-//     ));
-// }
-
 
 
 
@@ -546,42 +537,42 @@ function showRecipe(int $recipe_id): mixed
 //   POUR RECUPERER TOUS LES INGREDIENTS D'UNE RECETTE
 
 
-// function showIngredientsRecipe(int $id): mixed
-// {
-//     $pdo = connexionBdd();
-//     $sql = "SELECT recipe_ingredients.*, ingredients.name AS ingredient
-//     FROM recipe_ingredients
-//     LEFT JOIN ingredients
-//     ON recipe_ingredients.ingredient_id = ingredients.id
-//     WHERE recipe_id = :id ";
-//     $request = $pdo->prepare($sql);
-//     $request->execute(array(
-//         ':id' => $id
-//     ));
+function showIngredientsRecipe(int $id): mixed
+{
+    $pdo = connexionBdd();
+    $sql = "SELECT recipe_ingredients.*, ingredients.name AS ingredient
+    FROM recipe_ingredients
+    LEFT JOIN ingredients
+    ON recipe_ingredients.ingredient_id = ingredients.id
+    WHERE recipe_id = :id ";
+    $request = $pdo->prepare($sql);
+    $request->execute(array(
+        ':id' => $id
+    ));
 
-//     $result = $request->fetchAll();
-//     return $result;
-// }
+    $result = $request->fetchAll();
+    return $result;
+}
 
 
 //   POUR RECUPERER LES CATEGORIES D'UNE RECETTE
 
-// function showCategoriesRecipe(int $id): mixed
-// {
-//     $pdo = connexionBdd();
-//     $sql = "SELECT recipe_category.*, categories.name AS name
-//     FROM recipe_category
-//     LEFT JOIN categories
-//     ON recipe_category.category_id = categories.id
-//     WHERE recipe_id = :id ";
-//     $request = $pdo->prepare($sql);
-//     $request->execute(array(
-//         ':id' => $id
-//     ));
+function showCategoriesRecipe(int $id): mixed
+{
+    $pdo = connexionBdd();
+    $sql = "SELECT recipe_category.*, categories.name AS name
+    FROM recipe_category
+    LEFT JOIN categories
+    ON recipe_category.category_id = categories.id
+    WHERE recipe_id = :id ";
+    $request = $pdo->prepare($sql);
+    $request->execute(array(
+        ':id' => $id
+    ));
 
-//     $result = $request->fetchAll();
-//     return $result;
-// }
+    $result = $request->fetchAll();
+    return $result;
+}
 
 
 // **********************************************************************************

@@ -423,7 +423,7 @@ nav {
     }
 }
 
-#gestionRecipes {
+.gestionRecipes {
     background-color: var(--blue) !important;
 
     h2 {

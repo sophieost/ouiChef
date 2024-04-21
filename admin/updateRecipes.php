@@ -14,13 +14,10 @@ if (!isset($_SESSION['user'])) {
 if ($_GET['action'] == 'update') {
     $id = $_GET['id'];
     $recipe = showRecipe($id);
+    showCategoriesRecipe($id);
+    showIngredientsRecipe($id);
 
-    // $recipe_categories = showCategoriesRecipe($id);
-    // $recipe_ingredients = showIngredientsRecipe($id);
 }
-
-
-
 
 
 $info = '';
@@ -35,26 +32,6 @@ if (!empty($_POST)) {
 
     foreach ($_POST as $value) {
 
-        if (empty($value)) {
-            $verif = false;
-        }
-    }
-
-    if (!$verif) {
-        $info = alert("Tous les champs sont requis", "danger");
-    } else {
-
-        // ************************************************************************
-
-        // $maxSize = 500000;
-        // $extensions = array('.jpg', '.jpeg', '.png');
-        // $extension = strrchr($_FILES['image']['name'], '.');
-        // if (!in_array($extension, $extensions)) {
-        //     echo 'vous devez uploader un fichier de type jpeg, jpg ou png';
-        // }
-        // if ($_FILES['image']['size'] > $maxSize) {
-        //     echo 'alert';
-        // }
 
         if (!isset($_POST['name']) || (strlen($_POST['name']) < 3 && trim($_POST['name'])) || !preg_match('/^[a-zA-Z0-9 ]*$/', $_POST['name'])) {
 
@@ -74,29 +51,9 @@ if (!empty($_POST)) {
             $info .= alert("Les instructions ne sont pas valides", "danger");
         }
 
-        if (!isset($_POST['typePlat'])) {
-
-            $info .= alert("Le champs plat n'est pas valide", "danger");
-        }
-
-        if (!isset($_POST['price'])) {
-
-            $info .= alert("Le champs prix n'est pas valide", "danger");
-        }
-
-
-        if (!isset($_POST['time'])) {
-
-            $info .= alert("Le champs temps de préparation n'est pas valide", "danger");
-        }
-
-
-
 
         //S'il n y a pas d'erreur sur le formulaire
         if (empty($info)) {
-
-
 
             $name = htmlentities(trim($_POST['name']));
             $slug = htmlentities(trim($_POST['slug']));
@@ -105,14 +62,11 @@ if (!empty($_POST)) {
             $repas = $_POST['repas'] ?? 'all';
             $typePlat = $_POST['typePlat'] ?? '';
             $season = $_POST['season'] ?? 'all';
-            $price = $_POST['price'] ?? '';
+            $price = $_POST['price'] ?? 'all';
             $time = $_POST['time'] ?? '';
-            $categories = $_POST['categories'] ?? '';
-            $ingredients = $_POST['ingredients'] ?? '';
-            $recipe_id = $_POST['id'] ?? '';
-            // $ingredient_id = $_POST['ingredient_id'] ?? '';
-            // $quantity = $_POST['quantity'] ?? '';
-            // $unity = $_POST['unity'] ?? '';
+            $categories = isset($_POST['categories']) ? array_values($_POST['categories']) : [];
+            $ingredients = $_POST['ingredients'] ?? [];
+            $recipeId = $_POST['id'] ?? '';
 
 
             if (isset($_GET['action']) && $_GET['action'] == 'update' && isset($_GET['id'])) {
@@ -122,14 +76,8 @@ if (!empty($_POST)) {
 
                 // debug($ingredients);
 
-                updateRecipe($id, $name, $slug, $image, $instructions, $repas, $typePlat, $season, $price, $time, $categories, $ingredients);
-            } else {
+                updateRecipe($recipeId, $name, $slug, $image, $instructions, $repas, $typePlat, $season, $price, $time, $categories, $ingredients);
 
-                move_uploaded_file($_FILES['image']['tmp_name'], '../assets/img/' . $image);
-
-                // On enregistre le fichier image qui se trouve à l'adresse contenue dans $_FILES['image']['tmp_name'] vers la destination qui est le dossier "img" à l'adresse "../assets/nom_du_fichier.jpg".
-
-                addRecipe($name, $slug, $image, $instructions, $repas, $typePlat, $season, $price, $time, $categories, $ingredients);
             }
 
             header('location:dashboard.php?recipes_php');
@@ -138,20 +86,20 @@ if (!empty($_POST)) {
 }
 
 
-$title = 'Gestion des recettes';
+$title = 'Modifier une recette';
 
 require_once "../inc/header.inc.php";
 
 ?>
 
-<main class="py-5" id="gestionRecipes">
+<main class="py-5 gestionRecipes">
 
 
-    <h2 class="text-center fw-bolder mb-5"><?= isset($recipe) ? 'Modifier une recette' : 'Ajouter une recette' ?></h2>
+    <h2 class="text-center fw-bolder mb-5">Modifier une recette</h2>
     <?php
     echo $info;
     ?>
-    <form action="" method="post" enctype="multipart/form-data" class="container" id="recipeForm">
+    <form action="updateRecipes.php" method="post" enctype="multipart/form-data" class="container" id="recipeForm">
 
         <div class="row mt-5">
             <div class="col-md-4 mb-5">
@@ -182,12 +130,17 @@ require_once "../inc/header.inc.php";
 
             <?php
 
+            $recipeCategories = showCategoriesRecipe($id);
             $categories = allCategories();
+            $linkedCategoryIds = array_column($recipeCategories, 'category_id');
+
             foreach ($categories as $category) {
 
+                $isChecked = in_array($category['id'], $linkedCategoryIds);
             ?>
+
                 <div class="form-check col-sm-12 col-md-4 mx-auto">
-                    <input type="checkbox" class="form-check-input" id="category-<?= $category['id'] ?>" name="categories[]" value="<?= $category['id'] ?>">
+                    <input type="checkbox" class="form-check-input" id="category-<?= $category['id'] ?>" name="categories[]" value="<?= $category['id'] ?>" <?= $isChecked ? 'checked' : '' ?>>
                     <label for="category-<?= $category['id'] ?>"><?= $category['name'] ?></label>
                 </div>
             <?php
@@ -199,13 +152,22 @@ require_once "../inc/header.inc.php";
             <label for="ingredient-0" class="fw-bolder fs-5 mb-3">Ingrédients ( requis )</label>
 
             <?php
+
+            $recipeIngredients = showIngredientsRecipe($id);
+            $linkedIngredientIds = $linkedIngredients = [];
+
+            foreach ($recipeIngredients as $ingredient) {
+                $linkedIngredients[$ingredient['ingredient_id']] = $ingredient;
+            }
+
             $ingredients = allIngredients();
 
             foreach ($ingredients as $ingredient) {
 
-                $isChecked = isset($recipe) && is_array($recipe['ingredients']) && array_key_exists($ingredient['id'], $recipe['ingredients']);
-                $quantity = $isChecked ? $recipe['ingredients'][$ingredient['id']]['quantity'] : '';
-                $unity = $isChecked ? $recipe['ingredients'][$ingredient['id']]['unity'] : '';
+                $isChecked = array_key_exists($ingredient['id'], $linkedIngredients);
+                $quantity = $isChecked ? $linkedIngredients[$ingredient['id']]['quantity'] : '';
+                $unity = $isChecked ? $linkedIngredients[$ingredient['id']]['unity'] : '';;
+
             ?>
 
                 <div class="row">
@@ -241,12 +203,12 @@ require_once "../inc/header.inc.php";
                 <label for="repas" class="fw-bolder fs-5 mb-3">Repas</label>
 
                 <div class="form-check col-sm-6 col-md-4">
-                    <input type="radio" name="repas" class="form-check-input" id="flexRadio1" value="dejeuner" <?php if (isset($recipe['repas']) && $recipe['repas'] == "dejeuner") echo 'checked' ?>>
+                    <input type="checkbox" name="repas" class="form-check-input" id="flexRadio1" value="dejeuner" <?php if (isset($recipe['repas']) && $recipe['repas'] == "dejeuner") echo 'checked' ?>>
                     <label class="form-check-label" for="flexRadio1">Déjeuner</label>
                 </div>
 
                 <div class="form-check col-sm-6 col-md-4">
-                    <input type="radio" name="repas" class="form-check-input" id="flexRadio2" value="diner" <?php if (isset($recipe['repas']) && $recipe['repas'] == "diner") echo 'checked' ?>>
+                    <input type="checkbox" name="repas" class="form-check-input" id="flexRadio2" value="diner" <?php if (isset($recipe['repas']) && $recipe['repas'] == "diner") echo 'checked' ?>>
                     <label class="form-check-label" for="flexRadio2">Dîner</label>
                 </div>
             </div>
@@ -293,11 +255,10 @@ require_once "../inc/header.inc.php";
         </div>
 
 
-
         <div class="row mt-5">
             <div class="mb-3 col-md-6">
                 <label for="time" class="form-label  fs-5 fw-bold mb-3">Temps de péparation ( requis )</label>
-                <select multiple name="time" id="time" class="form-select form-select">
+                <select name="time" id="time" class="form-select">
                     <option value="rapide" <?php if (isset($recipe['time']) && $recipe['time'] == "rapide") echo 'selected' ?>>Rapide</option>
                     <option value="moyen" <?php if (isset($recipe['time']) && $recipe['time'] == "moyen") echo 'selected' ?>>Moyen</option>
                     <option value="long" <?php if (isset($recipe['time']) && $recipe['time'] == "long") echo 'selected' ?>>Long</option>
@@ -306,10 +267,12 @@ require_once "../inc/header.inc.php";
             </div>
             <div class="mb-3 col-md-6">
                 <label for="price" class="form-label  fs-5 fw-bold mb-3">Prix ( requis )</label>
-                <select multiple name="price" id="price" class="form-select form-select">
+                <select name="price" id="price" class="form-select">
                     <option value="bonMarche" <?php if (isset($recipe['price']) && $recipe['price'] == "bonMarche") echo 'selected' ?>>Bon marché</option>
                     <option value="raisonnable" <?php if (isset($recipe['price']) && $recipe['price'] == "raisonnable") echo 'selected' ?>>Raisonnable</option>
                     <option value="cher" <?php if (isset($recipe['price']) && $recipe['price'] == "cher") echo 'selected' ?>>Cher</option>
+
+
 
                 </select>
             </div>
@@ -317,7 +280,7 @@ require_once "../inc/header.inc.php";
 
 
         <div class="row">
-            <button type="submit" class="btn p-3 btnAdd w-50 mx-auto my-5"><?= isset($recipe) ? 'Modifier' : 'Ajouter' ?></button>
+            <button type="submit" class="btn p-3 btnAdd w-50 mx-auto my-5">Modifier</button>
         </div>
 
 
@@ -331,9 +294,9 @@ require_once "../inc/header.inc.php";
 
 <?php
 
-if (isset($_GET['recipes_php'])) {
-    require_once "recipes.php";
-}
+// if (isset($_GET['recipes_php'])) {
+//     require_once "recipes.php";
+// }
 
 
 require_once "../inc/footer.inc.php";
