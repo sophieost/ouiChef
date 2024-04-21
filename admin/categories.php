@@ -119,7 +119,7 @@ $title = "Catégories";
                     <tr>
                         <td><?= $category['id'] ?></td>
                         <td><?= ucfirst($category['name']) ?></td>
-                        <td class="text-center"><a href="?categories_php&action=delete&idy=<?= $category['id'] ?>"><i class="bi bi-trash-fill"></i></td>
+                        <td class="text-center"><a href="?categories_php&action=delete&id=<?= $category['id'] ?>"><i class="bi bi-trash-fill"></i></td>
                         <td class="text-center"><a href="?categories_php&action=update&id=<?= $category['id'] ?>"><i class="bi bi-pen-fill"></i></a></td>
                     </tr>
 

@@ -58,6 +58,7 @@ $title = "Recettes";
 
                     $instructions = stringToArray($recipe['instructions']);
 
+
                 ?>
                     <tr>
 
@@ -69,9 +70,9 @@ $title = "Recettes";
 
                         <td><?= substr(ucfirst($recipe['instructions']), 0, 40) . "..."  ?></td>
                         <td><?= isset($recipe['repas']) ? ucfirst($recipe['repas']) : "" ?></td>
-                        <td><?= ucfirst($recipe['plat']) ?></td>
+                        <td><?= ucfirst($recipe['typePlat']) ?></td>
                         <td><?= isset($recipe['season']) ? ucfirst($recipe['season']) : "" ?></td>
-                        <td><?= ucfirst($recipe['price']) ?></td>
+                        <td><?= ucfirst(isset($recipe['price'])) ?></td>
                         <td><?= ucfirst($recipe['time']) ?></td>
 
                         <td><?= isset($recipe['categories']) ? ucfirst($recipe['categories']) : "" ?></td>

@@ -15,13 +15,13 @@ if(!empty($_GET['action']) && $_GET['action'] == 'update' && !empty($_GET['id'])
     $user = showUser($_GET['id']);
     if($user['role']=='admin'){
         updateRole('user',$user['id']);
-        header("location:".RACINE_SITE."admin/dashboard.php?users_php");
+        // header("location:".RACINE_SITE."admin/dashboard.php?users_php");
 
     }
 
     if($user['role']=='user'){
         updateRole('admin',$user['id']);
-        header("location:".RACINE_SITE."admin/dashboard.php?users_php");
+        // header("location:".RACINE_SITE."admin/dashboard.php?users_php");
 
     }
 }
@@ -55,7 +55,7 @@ require_once "../inc/header.inc.php";
         </div>
     </div>
 
-  
+
 
         <div class="onglets row container wrap mx-auto">
             <!-- Les onglets du menu -->
@@ -65,7 +65,7 @@ require_once "../inc/header.inc.php";
             <div class="onglet col-lg-2 col-md-4 col-sm-12"><a href="?ingredients_php">Ingrédients</a></div>
         </div>
 
-        <div id="contenu" class="">
+        <div id="contenu">
             <!-- Le contenu qui change en fonction de l'onglet sélectionné -->
             <?php
             if (!empty($_GET)) {
@@ -89,11 +89,6 @@ require_once "../inc/header.inc.php";
             ?>
         </div>
 
-
-
-
-
-  
 
 
 

@@ -365,70 +365,77 @@ nav {
 
 /*   BACK-OFFICE */
 
-#users{
+#users {
 
-    button:hover{
+    button:hover {
         background-color: #add6cfae;
         color: white;
     }
 
-    th, tr, td{
+    th,
+    tr,
+    td {
         background-color: var(--blue) !important;
     }
 
-    .btnRole{
+    .btnRole {
         background-color: var(--orange);
         color: white;
     }
 }
 
-#recipeTable{
+#recipeTable {
 
     max-width: 100%;
     overflow-x: auto;
     transition: 0.5s ease-in-out;
 
-    th, tr, td{
+    th,
+    tr,
+    td {
         background-color: var(--blue) !important;
     }
 }
+
 #users,
 #recipeTable,
-#categoriesTable, 
-#ingredientsTable{
-    
-        .bi-pen-fill{
-            color: #2e2e2ec2;
-        }
-        .bi-trash-fill{
-            color: var(--orange);
-        }
-    
+#categoriesTable,
+#ingredientsTable {
+
+    .bi-pen-fill {
+        color: #2e2e2ec2;
+    }
+
+    .bi-trash-fill {
+        color: var(--orange);
+    }
+
 }
 
-.btnAdd{
+.btnAdd {
     background-color: white;
     color: var(--black);
     border: none;
-    
-    &:hover{
+
+    &:hover {
         background-color: var(--yellow);
         color: var(--black);
     }
 }
 
-#gestionRecipes{
+#gestionRecipes {
     background-color: var(--blue) !important;
 
-    h2{
-       margin-top: 100px;
+    h2 {
+        margin-top: 100px;
 
     }
 }
 
-#ingredientsContainer{
+#ingredientsContainer {
     background-color: var(--blue) !important;
-    input{
+
+    input {
         background-color: var(--blue) !important;
     }
 }
@@ -440,7 +447,8 @@ nav {
 
 /*   PROFIL UTILISATEUR  */
 
-#profil, #dashboard {
+#profil,
+#dashboard {
 
     background-color: var(--blue);
 
@@ -461,32 +469,34 @@ nav {
         color: var(--orange);
     }
 
-.onglets{
-    transition: 1s ease-in-out;
-    .onglet {
-        background-color: var(--orange);
-        margin: 50px;
-        padding: 10px 20px;
-        text-align: center;
-        border-radius: 5px;
-        &:hover{
-            transform: scale(1.05);
-        }
+    .onglets {
+        transition: 1s ease-in-out;
 
-        a {
-            text-decoration: none;
-            color: white;
-            
+        .onglet {
+            background-color: var(--orange);
+            margin: 50px;
+            padding: 10px 20px;
+            text-align: center;
+            border-radius: 5px;
+
+            &:hover {
+                transform: scale(1.05);
+            }
+
+            a {
+                text-decoration: none;
+                color: white;
+
+            }
         }
     }
-}
 
-    
+
 
 }
 
 .informations {
-    
+
     .champs {
         position: relative;
         margin-bottom: 1.25em;
@@ -530,11 +540,12 @@ nav {
             border-bottom: 1px solid var(--black);
         }
 
-        p{
+        p {
             font-size: 10px;
         }
     }
-    button{
+
+    button {
         background-color: var(--yellow);
         color: var(--black);
     }
@@ -543,10 +554,60 @@ nav {
 
 /*   LES RECETTES */
 
-#lesRecettes{
+#lesRecettes {
     background-color: var(--yellow);
-    padding-top: 10%;
     min-height: 100vh;
+
+    .recettesDiv {
+        margin-top: 100px;
+
+        a{
+            color: var(--black);
+        }
+        .btn:hover {
+            background-color: var(--orange);
+            color: white !important;
+            border: none;
+
+            a{
+                color: white;
+            }
+        }
+    }
+
+    .tag {
+        border-radius: 20px;
+        padding: 2px 8px;
+        background-color: var(--blue);
+        color: white;
+        margin: 5px;
+    }
+
+    .favParent{
+        transition: 1s ease-in-out;
+
+        .btn:hover {
+        background-color: var(--orange);
+        color: white !important;
+        border: none;
+    }
+
+    .iconFav:hover {
+        color: var(--orange) !important;
+    }
+    }
+
+    
+
+}
+
+#showRecipe{
+    margin-top: 200px;
+    min-height: 100vh;
+
+    .iconFav:hover {
+        color: var(--orange) !important;
+    }
 }
 
 

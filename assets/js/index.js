@@ -40,3 +40,13 @@ function showPassConnexion() {
 
     }
 }
+
+//   BOUTON FAVORI
+
+let linkFav = document.getElementsByClassName('linkFav');
+let iconFav = document.getElementsByClassName('iconFav');
+
+linkFav.addEventListener('click',()=>{
+
+    iconFav.style.color = 'red';
+})
