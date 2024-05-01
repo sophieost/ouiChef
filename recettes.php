@@ -10,19 +10,23 @@ require_once "inc/header.inc.php";
 $info = "";
 
 if (isset($_GET['action']) && isset($_GET['id'])) {
-    if (!empty($_GET['action']) && $_GET['action'] == 'add' && !empty($_GET['id'])) {
-        // Assurez-vous que l'utilisateur est connecté
+    if (!empty($_GET['action']) && $_GET['action'] == 'fav' && !empty($_GET['id'])) {
+
         if (isset($_SESSION['user'])) {
 
-            $userId = $_SESSION['user']; // Récupérez l'ID de l'utilisateur à partir de la session
+            $userId = $_SESSION['user']['id'];
             $recipeId = htmlentities($_GET['id']);
 
             addRecipeToFavorites($userId, $recipeId);
-        } else {
-            alert("Vous devez créer un compte pour ajouter une recette à vos favoris",'danger');
 
+            $info = alert("Recette ajoutée aux favoris", "success");
+
+        } else {
+            alert("Vous devez créer un compte pour ajouter une recette à vos favoris", 'danger');
         }
+
     }
+    // header("location:" . RACINE_SITE . "recettes.php");
 }
 
 
@@ -130,7 +134,6 @@ if (isset($_GET)) {
 
         <h5 class="nbreAffiche my-5 mx-5"><?= count($recipes) . " recettes trouvées" ?? "recettes" ?></h5>
 
-
         <div class="row my-5">
 
             <?php
@@ -141,7 +144,7 @@ if (isset($_GET)) {
 
                 <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
 
-                    <div class="card rounded h-100">
+                    <div class="card rounded-4 h-100">
 
                         <div class="card-body d-flex justify-content-between flex-column">
 
@@ -211,7 +214,7 @@ if (isset($_GET)) {
                             <div class="d-flex justify-content-between align-items-center favParent">
                                 <a href="<?= RACINE_SITE . "showRecipe.php?id=" . $recipe['id'] ?>" class="btn border">Voir la recette</a>
 
-                                <a href="recette.php?action=add&id=<?= $recipe['id'] ?>" class="linkFav"><i class="bi bi-heart fs-3 
+                                <a href="recettes.php?action=fav&id=<?= $recipe['id'] ?>" class="linkFav"><i class="bi bi-heart fs-3 
                                 iconFav text-dark"></i></a>
                             </div>
 
@@ -227,7 +230,7 @@ if (isset($_GET)) {
             }
             ?>
         </div>
-        
+
 
 
 

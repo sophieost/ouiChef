@@ -2,20 +2,36 @@
 
 require_once "inc/functions.inc.php";
 
+$info = '';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Récupération des données du formulaire
+    $nb_jours = $_POST['nb_jours'];
+    $nb_pers = $_POST['nb_pers'];
+    $time = isset($_POST['time']) ? $_POST['time'] : null;
+    $price = isset($_POST['price']) ? $_POST['price'] : null;
+    $season = isset($_POST['season']) ? $_POST['season'] : null;
+    $categories = isset($_POST['categories']) ? $_POST['categories'] : [];
+
+    // Récupération des recettes correspondantes
+    $recipes = getRecipesForm($season, $price, $time, $categories, $nb_jours);
+
+    $menu_id = addMenu($_SESSION['user']['id'], $nb_jours, $nb_pers);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+    // Si des recettes sont trouvées
+    if (!empty($recipes)) {
+        // Ajout du menu à la table menus
+        
+        // Redirection vers menus.php avec l'ID du menu dans l'URL
+        header("Location: " . RACINE_SITE . "menus.php?action=add&id_menu=$menu_id");
+        exit(); // Assurez-vous d'arrêter l'exécution du script après la redirection
+    } else {
+        // Redirection vers menus.php sans l'ID du menu dans l'URL
+        header("Location: " . RACINE_SITE . "menus.php");
+        exit();
+    }
+}
 
 
 
@@ -30,115 +46,140 @@ require_once "inc/header.inc.php";
 
         <div class="card container p-3">
             <h1 class="text-center fs-1 my-2">MON MENU</h1>
+
             <form action="" method="post">
+
+
 
                 <div class="row">
 
-
-                    <div class="col-md-6 px-3">
-                        <div>
-                            <label class="form-label fw-bold mt-3" for="start"> Date de début</label>
-                            <input type="date" name="start" id="start" class="form-control">
-                        </div>
-
-                        <div>
-                            <label class="form-label fw-bold mt-3" for="end"> Date de fin</label>
-                            <input type="date" name="end" id="end" class="form-control">
-                        </div>
-
-                        <div class="people mt-3">
-                            <label for="people" class="form-label fw-bold"> Nombre de personnes</label>
-                            <input type="range" id="people" name="people" min="1" max="16" step="1">
-                            <p class="text-center fs-4 w-75 d-flex justify-content-center align-items-center"><output id="value"></output><i class="bi bi-person-fill fs-4"></i></p>
-
-                        </div>
-
-                        <div class="time mt-3">
-                            <label for="time" class="form-label fw-bold"> Temps de préparation
-
-                                <div class="mt-2">
-                                    <label for="time1" class="fs-4">
-                                        <input type="checkbox" id="time1">
-                                        <span class="label"><i class="bi bi-clock" data-value="1"></i></span>
-                                    </label>
-                                    <label for="time2" class="fs-4">
-                                        <input type="checkbox" id="time2">
-                                        <span class="label"><i class="bi bi-clock" data-value="2"></i></span>
-                                    </label>
-                                    <label for="time3" class="fs-4">
-                                        <input type="checkbox" id="time3">
-                                        <span class="label"><i class="bi bi-clock" data-value="3"></i></span>
-                                    </label>
-                                </div>
-
-
-                            </label>
-                        </div>
-
-                        <div class="price mt-3">
-                            <label for="price" class="form-label fw-bold text-center"> Prix
-
-                                <div class="mt-2">
-                                    <label for="price1" class="fs-3">
-                                        <input type="checkbox" id="price1">
-                                        <span class="label"><i class="bi bi-currency-euro" data-value="1"></i></span>
-                                    </label>
-                                    <label for="price2" class="fs-3">
-                                        <input type="checkbox" id="price2">
-                                        <span class="label"><i class="bi bi-currency-euro" data-value="2"></i></span>
-                                    </label>
-                                    <label for="price3" class="fs-3">
-                                        <input type="checkbox" id="price3">
-                                        <span class="label"><i class="bi bi-currency-euro" data-value="3"></i></span>
-                                    </label>
-                                </div>
-
-                            </label>
+                    <div class="col-lg-6 col-sm-12">
+                        <div class="days mt-3 d-flex flex-column justify-content-center align-items-center">
+                            <label for="nb_jours" class="form-label fw-bold"> Nombre de jours</label>
+                            <input type="range" id="nb_jours" name="nb_jours" min="1" max="30" step="1">
+                            <p class="fs-4 w-50 d-flex justify-content-center"><output id="valueJours"></output><i class="bi bi-calendar-day ms-2"></i></p>
                         </div>
                     </div>
 
-                    <div class="col-md-6 d-flex flex-column justify-content-between px-3 repas">
-                        <div class="d-flex flex-column mt-3">
-                            <label for="" class=" fw-bold"> Repas
+                    <div class="col-lg-6 col-sm-12">
+                        <div class="people mt-3 d-flex flex-column justify-content-center align-items-center">
+                            <label for="nb_pers" class="form-label fw-bold"> Nombre de personnes</label>
+                            <input type="range" id="nb_pers" name="nb_pers" min="1" max="16" step="1">
+                            <p class="fs-4 w-50 d-flex justify-content-center"><output id="valuePers"></output><i class="bi bi-person-fill fs-4 ms-2"></i></p>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <div class="row align-items-center">
+                    <div class="col-lg-6 col-md-12 px-3 text-center">
+                        <div class="d-flex flex-column mt-3 align-items-center">
+
+                            <label for="" class=" fw-bold"> Temps de préparation
                             </label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" name="repas" id="dejeuner" value="dejeuner">
-                                <label class="form-check-label" for="dejeuner">Déjeuner</label>
+
+                            <div class="d-flex flex-column mt-2">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="time" id="rapide" value="rapide">
+                                    <label class="form-check-label" for="rapide">Rapide</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="time" id="moyen" value="moyen">
+                                    <label class="form-check-label" for="moyen">Moyen</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="time" id="long" value="long">
+                                    <label class="form-check-label" for="long">Long</label>
+                                </div>
                             </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" name="repas" id="diner" value="diner">
-                                <label class="form-check-label" for="diner">Dîner</label>
-                            </div>
+
 
                         </div>
+                    </div>
 
-                        <div class="d-flex flex-column mt-3">
-                            <label for="" class=" fw-bold"> Plats
+
+                    <div class="col-lg-6 col-md-12 px-3 text-center">
+
+                        <div class="d-flex flex-column mt-3 align-items-center">
+
+                            <label for="" class=" fw-bold"> Prix
                             </label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" name="plat" id="Entree" value="Entree">
-                                <label class="form-check-label" for="Entree">Entrée</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" name="plat" id="plat" value="plat">
-                                <label class="form-check-label" for="plat">Plat</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" name="plat" id="dessert" value="dessert">
-                                <label class="form-check-label" for="dessert">Dessert</label>
-                            </div>
-                        </div>
 
-                        <div>
-                            <button class="btn bg-white btnOptions mb-5">Plus d'options <i class="bi bi-arrow-right-square"></i></button>
+                            <div class="d-flex flex-column mt-2">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="price" id="bonMarche" value="bonMarche">
+                                    <label class="form-check-label" for="bonMarche">Petit budget</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="price" id="raisonnable" value="raisonnable">
+                                    <label class="form-check-label" for="raisonnable">Budget moyen</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="price" id="cher" value="cher">
+                                    <label class="form-check-label" for="cher">Gros budget</label>
+                                </div>
+                            </div>
+
 
                         </div>
                     </div>
                 </div>
-                <div class="options">
+
+
+
+
+                <div class="row">
+
+                    <div class="col-lg-6 col-md-12 season">
+                        <div class="d-flex flex-column mt-3 ms-5 align-items-center">
+
+                            <label for="" class=" fw-bold"> Saison
+                            </label>
+
+                            <div class="d-flex flex-column mt-2">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="season" id="ete" value="ete">
+                                    <label class="form-check-label" for="ete">Été</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="season" id="hiver" value="hiver">
+                                    <label class="form-check-label" for="hiver">Hiver</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="season" id="all" value="all">
+                                    <label class="form-check-label" for="all">Toutes saisons</label>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-12">
+                        <div class="d-flex justify-content-center">
+                            <button class="btn bg-white btnOptions my-5">Plus d'options</button>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <div class="options pt-3">
                     <h2>Mes préférences</h2>
-                    <div>
-                        <label><input type="checkbox"><span class="label">Healthy</span></label>
+                    <div class="py-3">
+                        <?php
+                        $categories = allCategories();
+                        foreach ($categories as $category) {
+                            $categoryId = $category['id'];
+                        ?>
+                            <label for="category_<?= $categoryId ?>" class="m-2"><input type="checkbox" name="categories[]" id="category_<?= $categoryId ?>" value="<?= $categoryId ?>"><span class="label p-2"><?= $category['name'] ?></span></label>
+                        <?php
+                        }
+                        ?>
                     </div>
                 </div>
 

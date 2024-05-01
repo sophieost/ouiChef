@@ -29,6 +29,7 @@ $info = '';
 
 if (!empty($_POST)) {
     // debug($_POST);
+    // debug($_FILES);
 
     $verif = true;
 
@@ -41,17 +42,14 @@ if (!empty($_POST)) {
 
     if (!$verif) {
         $info = alert("Tous les champs sont requis", "danger");
-    } else {
 
-        $maxSize = 500000;
-        $extensions = array('.jpg', '.jpeg', '.png');
-        $extension = strrchr($_FILES['image']['name'], '.');
-        if (!in_array($extension, $extensions)) {
-            echo 'vous devez uploader un fichier de type jpeg, jpg ou png';
-        }
-        if ($_FILES['image']['size'] > $maxSize) {
-            echo 'alert';
-        }
+
+        $name = htmlentities(trim($_POST['name']));
+        $image = $_FILES['image']['name'];
+
+        move_uploaded_file($_FILES['image']['tmp_name'], '../assets/img/ingredients/' . $image);
+
+        $result = addIngredient($name, $image);
 
 
         if (!isset($_POST['name']) || (strlen($_POST['name']) < 3 && trim($_POST['name'])) || preg_match('/[0-9]+/', $_POST['name'])) {
@@ -61,9 +59,6 @@ if (!empty($_POST)) {
 
         if (empty($info)) {
 
-            $name = htmlentities(trim($_POST['name']));
-            $image = $_FILES['image']['name'];
-
 
             if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['id'])) {
 
@@ -71,11 +66,6 @@ if (!empty($_POST)) {
                 move_uploaded_file($_FILES['image']['tmp_name'], '../assets/img/ingredients/' . $image);
 
                 $result = updateIngredient($id, $name, $image);
-            } else {
-
-                move_uploaded_file($_FILES['image']['tmp_name'], '../assets/img/ingredients/' . $image);
-
-                $result = addIngredient($ingredientName, $image);
             }
         }
     }

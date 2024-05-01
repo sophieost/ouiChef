@@ -84,20 +84,54 @@ require_once "inc/header.inc.php";
 
     </div>
 
-    <div>
-        <div>
-        <img src="<?= RACINE_SITE . "assets/img/" . $recipes['image'] ?>" class="card-img h-50" alt="image de . <?= $recipes['name'] ?>">
+    <div class="row">
+        <div class="col-md-6 col-sm-12 h-100 mb-3">
+            <img src="<?= RACINE_SITE . "assets/img/" . $recipes['image'] ?>" class="card-img h-50" alt="image de . <?= $recipes['name'] ?>">
         </div>
 
-        <div class="ingredients">
-            <h3>INGREDIENTS</h3>
+        <div class="ingredients col-md-6 col-sm-12">
+
+            <h3 class="mb-3">INGREDIENTS</h3>
 
             <form action="" method="post">
+                <div class="d-flex flex-column mx-5">
 
-            
+                    <?php
+                    $ingredients =  showIngredientsRecipe($id);
+
+                    foreach ($ingredients as $ingredient) {
+                    ?>
+                        <div class="d-flex my-3 justify-content-between mx-5">
+                            <div class="">
+                                <input class="form-control border-0" type="text" id="ingedient" name="ingredient" value="<?= $ingredient['ingredient'] ?>" readonly>
+                            </div>
+
+                            <div class="img-ingredients">
+                                <img class="" src="<?= RACINE_SITE . "assets/img/ingredients/" . $ingredient['image'] ?>" alt="image de" .<?= $ingredient['ingredient'] ?>>
+                            </div>
+                        </div>
+
+                    <?php
+                    }
+                    ?>
+                </div>
+                <div class="d-flex justify-content-center my-5">
+                    <input class="btn" type="submit" value="Ajouter à la liste de courses">
+                </div>
+
             </form>
-
         </div>
+    </div>
+    <div>
+        <h3 class="mb-3">INSTRUCTIONS</h3>
+        <?php
+        foreach ($instructions as $instruction) {
+        ?>
+            <p><?= $instruction?></p>
+
+        <?php
+        }
+        ?>
     </div>
 
 

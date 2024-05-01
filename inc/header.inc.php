@@ -47,10 +47,10 @@ logOut();
 
                     <ul class="navbar-nav mb-2 mb-lg-0 ml-auto align-items-end me-5">
                         <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="#">Mes Menus</a>
+                            <a class="nav-link" aria-current="page" href="<?= RACINE_SITE ?>menus.php">Mes Menus</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Ma liste de courses</a>
+                            <a class="nav-link" href="<?= RACINE_SITE ?>liste.php">Ma liste de courses</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= RACINE_SITE ?>recettes.php">Les recettes</a>

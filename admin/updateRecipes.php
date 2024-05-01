@@ -2,6 +2,7 @@
 
 require_once "../inc/functions.inc.php";
 
+
 if (!isset($_SESSION['user'])) {
     header("location:" . RACINE_SITE . "identification.php");
 } else {
@@ -12,11 +13,12 @@ if (!isset($_SESSION['user'])) {
 
 
 if ($_GET['action'] == 'update') {
+
     $id = $_GET['id'];
+
     $recipe = showRecipe($id);
     showCategoriesRecipe($id);
     showIngredientsRecipe($id);
-
 }
 
 
@@ -28,23 +30,24 @@ if (!empty($_POST)) {
 
     // debug($_POST);
 
+
     $verif = true;
 
     foreach ($_POST as $value) {
 
 
-        if (!isset($_POST['name']) || (strlen($_POST['name']) < 3 && trim($_POST['name'])) || !preg_match('/^[a-zA-Z0-9 ]*$/', $_POST['name'])) {
+        // if (!isset($_POST['name']) || (strlen($_POST['name']) < 3 && trim($_POST['name'])) || !preg_match('/^[a-zA-Z0-9 ]*$/', $_POST['name'])) {
 
 
-            $info .= alert("Le nom n'est pas valide", "danger");
-        }
+        //     $info .= alert("Le nom n'est pas valide", "danger");
+        // }
 
 
-        if (!isset($_POST['slug']) || (strlen($_POST['slug']) < 3 && trim($_POST['slug'])) || !preg_match('/^[a-zA-Z0-9-]+$/', $_POST['slug'])) {
+        // if (!isset($_POST['slug']) || (strlen($_POST['slug']) < 3 && trim($_POST['slug'])) || !preg_match('/^[a-zA-Z0-9-]+$/', $_POST['slug'])) {
 
 
-            $info .= alert("Le slug n'est pas valide", "danger");
-        }
+        //     $info .= alert("Le slug n'est pas valide", "danger");
+        // }
 
         if (!isset($_POST['instructions']) || strlen($_POST['instructions']) < 50) {
 
@@ -59,26 +62,24 @@ if (!empty($_POST)) {
             $slug = htmlentities(trim($_POST['slug']));
             $image = $_FILES['image']['name'] ?? '';
             $instructions = htmlentities(trim($_POST['instructions']));
-            $repas = $_POST['repas'] ?? 'all';
             $typePlat = $_POST['typePlat'] ?? '';
             $season = $_POST['season'] ?? 'all';
             $price = $_POST['price'] ?? 'all';
             $time = $_POST['time'] ?? '';
             $categories = isset($_POST['categories']) ? array_values($_POST['categories']) : [];
             $ingredients = $_POST['ingredients'] ?? [];
-            $recipeId = $_POST['id'] ?? '';
+            $id = $_POST['id'] ?? '';
 
 
-            if (isset($_GET['action']) && $_GET['action'] == 'update' && isset($_GET['id'])) {
+            // if (isset($_GET['action']) && $_GET['action'] == 'update' && isset($_GET['id'])) {
 
-
+                // debug($_FILES);
                 move_uploaded_file($_FILES['image']['tmp_name'], '../assets/img/' . $image);
 
                 // debug($ingredients);
 
-                updateRecipe($recipeId, $name, $slug, $image, $instructions, $repas, $typePlat, $season, $price, $time, $categories, $ingredients);
-
-            }
+                updateRecipe($id, $name, $slug, $image, $instructions, $typePlat, $season, $price, $time, $categories, $ingredients);
+            // }
 
             header('location:dashboard.php?recipes_php');
         }
@@ -99,7 +100,7 @@ require_once "../inc/header.inc.php";
     <?php
     echo $info;
     ?>
-    <form action="updateRecipes.php" method="post" enctype="multipart/form-data" class="container" id="recipeForm">
+    <form action="updateRecipes.php" method="post" enctype="multipart/form-data" class="container" id="updateRecipeForm">
 
         <div class="row mt-5">
             <div class="col-md-4 mb-5">
@@ -130,8 +131,8 @@ require_once "../inc/header.inc.php";
 
             <?php
 
-            $recipeCategories = showCategoriesRecipe($id);
             $categories = allCategories();
+            $recipeCategories = showCategoriesRecipe($id);
             $linkedCategoryIds = array_column($recipeCategories, 'category_id');
 
             foreach ($categories as $category) {
@@ -166,7 +167,14 @@ require_once "../inc/header.inc.php";
 
                 $isChecked = array_key_exists($ingredient['id'], $linkedIngredients);
                 $quantity = $isChecked ? $linkedIngredients[$ingredient['id']]['quantity'] : '';
-                $unity = $isChecked ? $linkedIngredients[$ingredient['id']]['unity'] : '';;
+                $unity = $isChecked ? $linkedIngredients[$ingredient['id']]['unity'] : '';
+
+
+                // foreach ($ingredients as $ingredient) {
+
+                //     $isChecked = isset($linkedIngredients[$ingredient['id']]);
+                //     $quantity = $isChecked ? $linkedIngredients[$ingredient['id']]['quantity'] : '';
+                //     $unity = $isChecked ? $linkedIngredients[$ingredient['id']]['unity'] : '';
 
             ?>
 
@@ -199,22 +207,7 @@ require_once "../inc/header.inc.php";
 
         <div class="row mt-5 ms-3">
 
-            <div class="col-md-4">
-                <label for="repas" class="fw-bolder fs-5 mb-3">Repas</label>
-
-                <div class="form-check col-sm-6 col-md-4">
-                    <input type="checkbox" name="repas" class="form-check-input" id="flexRadio1" value="dejeuner" <?php if (isset($recipe['repas']) && $recipe['repas'] == "dejeuner") echo 'checked' ?>>
-                    <label class="form-check-label" for="flexRadio1">Déjeuner</label>
-                </div>
-
-                <div class="form-check col-sm-6 col-md-4">
-                    <input type="checkbox" name="repas" class="form-check-input" id="flexRadio2" value="diner" <?php if (isset($recipe['repas']) && $recipe['repas'] == "diner") echo 'checked' ?>>
-                    <label class="form-check-label" for="flexRadio2">Dîner</label>
-                </div>
-            </div>
-
-
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <label for="typePlat" class="fw-bolder fs-5 mb-3">Type de plat ( requis )</label>
 
                 <div class="form-check col-sm-4 col-md-4">
@@ -235,7 +228,7 @@ require_once "../inc/header.inc.php";
                     <label class="form-check-label" for="flexRadioDefault3">Dessert</label>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <label for="season" class="fw-bold fs-5 mb-3">Saison</label>
 
                 <div class="form-check col-sm-4 col-md-4">
@@ -293,11 +286,5 @@ require_once "../inc/header.inc.php";
 
 
 <?php
-
-// if (isset($_GET['recipes_php'])) {
-//     require_once "recipes.php";
-// }
-
-
 require_once "../inc/footer.inc.php";
 ?>

@@ -109,10 +109,10 @@ function connexionBdd()
 //  DECONNEXION DATABASE 
 
 
-function deconnexionBdd($pdo)
-{
-    $pdo = null;
-}
+// function deconnexionBdd($pdo)
+// {
+//     $pdo = null;
+// }
 
 
 //  INSCRIPTION USERS
@@ -266,7 +266,7 @@ function allRecipes(): array
 {
 
     $pdo = connexionBdd();
-    $sql = "SELECT r.id, r.name, r.slug, r.image, r.instructions, r.repas, r.typePlat, r.season, r.price, r.time,
+    $sql = "SELECT r.id, r.name, r.slug, r.image, r.instructions, r.typePlat, r.season, r.price, r.time,
     GROUP_CONCAT(DISTINCT cat.name ORDER BY cat.name ASC SEPARATOR ', ') AS categories,
     GROUP_CONCAT(DISTINCT CONCAT(ing.name, ' : ', ri.quantity, ' ', ri.unity) ORDER BY ing.name ASC SEPARATOR ', ') AS ingredients
     FROM recipes r
@@ -281,34 +281,14 @@ function allRecipes(): array
 }
 
 
+
 //   POUR AJOUTER UNE RECETTE
 
-// function addRecipe(string $name, string $slug, string $image, string $instructions, string $repas, string $typePlat, string $season, string $price, string $time): void
-// {
-//     $pdo = connexionBdd();
-
-//     $sql = "INSERT INTO recipes (name, slug, image, instructions, repas, typePlat, season, price, time) VALUES (:name, :slug, :image, :instructions, :repas, :typePlat, :season, :price, :time)";
-//     $request = $pdo->prepare($sql);
-//     $result = $request->execute(array(
-//         ':name' => $name,
-//         ':slug' => $slug,
-//         ':image' => $image,
-//         ':instructions' => $instructions,
-//         ':repas' => $repas,
-//         ':typePlat' => $typePlat,
-//         ':season' => $season,
-//         ':price' => $price,
-//         ':time' => $time
-//     ));
-// }
-
-
-
-function addRecipe(string $name, string $slug, string $image, string $instructions, string $repas, string $typePlat, string $season, string $price, string $time, array $categories, array $ingredients): void
+function addRecipe(string $name, string $slug, string $image, string $instructions, string $typePlat, string $season, string $price, string $time, array $categories, array $ingredients): void
 {
     $pdo = connexionBdd();
 
-    $sql = "INSERT INTO recipes (name, slug, image, instructions, repas, typePlat, season, price, time) VALUES (:name, :slug, :image, :instructions, :repas, :typePlat, :season, :price, :time)";
+    $sql = "INSERT INTO recipes (name, slug, image, instructions, typePlat, season, price, time) VALUES (:name, :slug, :image, :instructions, :typePlat, :season, :price, :time)";
 
     $request = $pdo->prepare($sql);
     $request->execute(array(
@@ -316,7 +296,6 @@ function addRecipe(string $name, string $slug, string $image, string $instructio
         ':slug' => $slug,
         ':image' => $image,
         ':instructions' => $instructions,
-        ':repas' => $repas,
         ':typePlat' => $typePlat,
         ':season' => $season,
         ':price' => $price,
@@ -358,12 +337,13 @@ function addRecipe(string $name, string $slug, string $image, string $instructio
 }
 
 
+//   POUR METTRE A JOUR UNE RECETTE
 
-function updateRecipe(int $id, string $name, string $slug, string $image, string $instructions, string $repas, string $typePlat, string $season, string $price, string $time, array $categories, array $ingredients): void
+function updateRecipe(int $id, string $name, string $slug, string $image, string $instructions, string $typePlat, string $season, string $price, string $time, array $categories, array $ingredients): void
 {
     $pdo = connexionBdd();
 
-    $sql = "UPDATE recipes SET name=:name, slug=:slug, image=:image, instructions=:instructions, repas=:repas, typePlat=:typePlat, season=:season, price=:price, time=:time WHERE id=:id";
+    $sql = "UPDATE recipes SET name=:name, slug=:slug, image=:image, instructions=:instructions, typePlat=:typePlat, season=:season, price=:price, time=:time WHERE id=:id";
 
     $request = $pdo->prepare($sql);
     $request->execute(array(
@@ -372,27 +352,24 @@ function updateRecipe(int $id, string $name, string $slug, string $image, string
         ':slug' => $slug,
         ':image' => $image,
         ':instructions' => $instructions,
-        ':repas' => $repas,
         ':typePlat' => $typePlat,
         ':season' => $season,
         ':price' => $price,
         ':time' => $time
     ));
 
-    // Suppression des anciennes catégories et ingrédients
+
     $sql = "DELETE FROM recipe_category WHERE recipe_id=:id";
 
     $request = $pdo->prepare($sql);
-    $request->bindParam(':id', $id);
-    $request->execute();
+    $request->execute(array(':id' => $id));
 
     $sql = "DELETE FROM recipe_ingredients WHERE recipe_id=:id";
 
     $request = $pdo->prepare($sql);
-    $request->bindParam(':id', $id);
-    $request->execute();
+    $request->execute(array(':id' => $id));
 
-    // Ajout des nouvelles catégories
+
     foreach ($categories as $categoryId) {
 
         $sql = "INSERT INTO recipe_category (recipe_id, category_id) VALUES (:recipeId, :categoryId)";
@@ -402,9 +379,11 @@ function updateRecipe(int $id, string $name, string $slug, string $image, string
             ':recipeId' => $id,
             ':categoryId' => $categoryId
         ));
+
+
     }
 
-    // Ajout des nouvelles ingrédients
+
     foreach ($ingredients as $ingredientId => $ingredientInfo) {
 
         if (isset($ingredientInfo['checked'])) {
@@ -423,11 +402,51 @@ function updateRecipe(int $id, string $name, string $slug, string $image, string
             ));
         }
     }
+
+
+
+
+                
+
+
+    // $request = $pdo->prepare("DELETE FROM recipe_category WHERE recipe_id = :id");
+    // $request->execute([':id' => $id]);
+    // foreach ($categories as $categoryId) {
+    //     $sql = "INSERT INTO recipe_category (recipe_id, category_id) VALUES (:id, :categoryId)";
+    //     $request = $pdo->prepare($sql);
+    //     $request->execute(array(
+    //         ':id' => $id,
+    //         ':categoryId' => $categoryId
+    //     ));
+    // }
+
+
+    // $request = $pdo->prepare("DELETE FROM recipe_ingredients WHERE recipe_id = :id");
+    // $request->execute([':id' => $id]);
+    // foreach ($ingredients as $ingredientId => $ingredientInfo) {
+
+    //     if (isset($ingredientInfo['checked'])) {
+
+    //         $quantity = floatval($ingredientInfo['quantity']);
+    //         $unity = $ingredientInfo['unity'];
+
+    //         $sql = "INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unity) VALUES (:id, :ingredientId, :quantity, :unity)";
+
+    //         $request = $pdo->prepare($sql);
+    //         $request->execute(array(
+    //             ':id' => $id,
+    //             ':ingredientId' => $ingredientId,
+    //             ':quantity' => $quantity,
+    //             ':unity' => $unity
+    //         ));
+    //     }
+    // }
 }
 
 
 
 //   POUR SUPPRIMER UNE RECETTE
+
 function deleteRecipe(int $id): bool
 {
     $pdo = connexionBdd();
@@ -452,34 +471,12 @@ function deleteRecipe(int $id): bool
 
 
 
-//   POUR MODIFIER UNE RECETTE
-
-// function updateRecipe(int $id, string $name, string $slug, string $image, string $instructions, string $repas, string $typePlat, string $season, string $price, string $time): void
-// {
-//     $pdo = connexionBdd();
-//     $sql = "UPDATE recipes SET name = :name, slug = :slug, image = :image, instructions = :instructions, repas = :repas, typePlat = :typePlat, season = :season, price = :price, time = :time WHERE id = :id";
-//     $request = $pdo->prepare($sql);
-//     $request->execute([
-//         ':id' => $id,
-//         ':name' => $name,
-//         ':slug' => $slug,
-//         ':image' => $image,
-//         ':instructions' => $instructions,
-//         ':repas' => $repas,
-//         ':typePlat' => $typePlat,
-//         ':season' => $season,
-//         ':price' => $price,
-//         ':time' => $time
-//     ]);
-// }
-
-
 //   AFFICHER UNE RECETTE
 
 function showRecipe(int $recipe_id): mixed
 {
     $pdo = connexionBdd();
-    $sql = "SELECT r.id, r.name, r.slug, r.image, r.instructions, r.repas, r.typePlat, r.season, r.price, r.time,
+    $sql = "SELECT r.id, r.name, r.slug, r.image, r.instructions, r.typePlat, r.season, r.price, r.time,
     GROUP_CONCAT(DISTINCT cat.name ORDER BY cat.name ASC SEPARATOR ', ') AS categories,
     GROUP_CONCAT(DISTINCT CONCAT(ing.name, ' : ', ri.quantity, ' ', ri.unity) ORDER BY ing.name ASC SEPARATOR ', ') AS ingredients
     FROM recipes r
@@ -499,40 +496,6 @@ function showRecipe(int $recipe_id): mixed
 }
 
 
-//   MODIFIER LA RELATION RECETTE/CATEGORIES DANS LA TABLE RECIPE_CATEGORIES
-
-// function updateRecipeCategories(int $recipe_id, array $category_id): void
-// {
-//     $pdo = connexionBdd();
-//     $sql = "INSERT INTO recipe_category (recipe_id, category_id) VALUES (:recipe_id, :category_id) ON DUPLICATE KEY UPDATE category_id = :category_id";
-//     $request = $pdo->prepare($sql);
-//     $request->execute([
-//         ':recipe_id' => $recipe_id,
-//         ':category_id' => $category_id
-//     ]);
-// }
-
-
-//   MODIFIER LA RELATION RECETTE/INGREDIENTS DANS LA TABLE RECIPE_INGREDIENTS
-
-// function updateRecipeIngredients(int $recipe_id, int $ingredient_id, float $quantity, string $unity): void
-// {
-//     $pdo = connexionBdd();
-
-//     if (isset($ingredient['checked'])) {
-//         $sql = "INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unity) VALUES (:recipe_id, :ingredient_id, :quantity, :unity) ON DUPLICATE KEY UPDATE quantity = :quantity, unity = :unity";
-//         $request = $pdo->prepare($sql);
-//         $request->execute([
-//             ':recipe_id' => $recipe_id,
-//             ':ingredient_id' => $ingredient_id,
-//             ':quantity' => $quantity,
-//             ':unity' => $unity
-//         ]);
-//     }
-// }
-
-
-
 
 //   POUR RECUPERER TOUS LES INGREDIENTS D'UNE RECETTE
 
@@ -540,7 +503,7 @@ function showRecipe(int $recipe_id): mixed
 function showIngredientsRecipe(int $id): mixed
 {
     $pdo = connexionBdd();
-    $sql = "SELECT recipe_ingredients.*, ingredients.name AS ingredient
+    $sql = "SELECT recipe_ingredients.*, ingredients.name AS ingredient, ingredients.image AS image
     FROM recipe_ingredients
     LEFT JOIN ingredients
     ON recipe_ingredients.ingredient_id = ingredients.id
@@ -685,35 +648,6 @@ function addIngredient(string $name, string $image): void
 }
 
 
-// function addIngredient(string $name, string $image): void
-// {
-//     $pdo = connexionBdd();
-
-//     // Vérifiez d'abord si un ingrédient avec le même nom existe déjà
-//     $checkSql = "SELECT COUNT(*) FROM ingredients WHERE name = :name";
-//     $checkStmt = $pdo->prepare($checkSql);
-//     $checkStmt->execute([':name' => $name]);
-//     $exists = $checkStmt->fetchColumn();
-
-//     if (!$exists) {
-//         // Si l'ingrédient n'existe pas, insérez-le
-//         $sql = "INSERT INTO ingredients (name, image) VALUES (:name, :image)";
-//         $request = $pdo->prepare($sql);
-//         $request->execute([
-//             ':name' => $name,
-//             ':image' => $image
-//         ]);
-//     } else {
-
-//         $updateSql = "UPDATE ingredients SET image = :image WHERE name = :name";
-//         $updateStmt = $pdo->prepare($updateSql);
-//         $updateStmt->execute([
-//             ':name' => $name,
-//             ':image' => $image
-//         ]);
-//     }
-// }
-
 
 //   MODIFIER UN INGREDIENT
 
@@ -829,19 +763,12 @@ function recipesByPlat(string $typePlat): array
     return $result;
 }
 
-//   FONCTION POUR RECUPERER LES RECETTES PAR REPAS
 
 
-function recipesByRepas(string $repas): array
-{
-    $pdo = connexionBdd();
-    $sql = "SELECT * FROM recipes WHERE repas = :repas";
-    $request = $pdo->prepare($sql);
-    $request->execute(array(':repas' => $repas));
 
-    $result = $request->fetchAll();
-    return $result;
-}
+
+// ********************************************************
+
 
 
 //   FONCTION POUR AJOUTER UNE RECETTE AUX FAVORIS
@@ -849,10 +776,254 @@ function recipesByRepas(string $repas): array
 function addRecipeToFavorites(int $userId, int $recipeId): bool
 {
     $pdo = connexionBdd();
-    $sql = "INSERT INTO users_recipe (user_id, recipe_id, aime) VALUES (:userId, :recipeId, 1)
+    $sql = "INSERT INTO users_recipes (user_id, recipe_id, aime) VALUES (:userId, :recipeId, 1)
             ON DUPLICATE KEY UPDATE aime = 1";
     $request = $pdo->prepare($sql);
-    $success = $request->execute(array(':userId' => $userId, ':recipeId' => $recipeId));
+    $result = $request->execute(array(':userId' => $userId, ':recipeId' => $recipeId));
 
-    return $success;
+    return $result;
 }
+
+
+//   FONCTION POUR SUPPRIMER UNE RECETTE FAVORITE
+
+
+//   FONCTION POUR RECUPERER LES RECETTES FAVORITES D'UN UTILISATEUR
+
+function allFavoriteRecipes(int $userId): array
+{
+    $pdo = connexionBdd();
+    $sql = "SELECT ur.recipe_id, r.name FROM users_recipes ur 
+            JOIN recipes r ON ur.recipe_id = r.id 
+            WHERE ur.user_id = :userId AND ur.aime = 1";
+    $request = $pdo->prepare($sql);
+    $request->execute([':userId' => $userId]);
+
+    $favoriteRecipes = $request->fetchAll(PDO::FETCH_ASSOC);
+
+    return $favoriteRecipes;
+}
+
+
+
+
+//   FONCTION POUR AJOUTER UNE RECETTE A LA BLACKLIST
+
+function addRecipeToBlacklist(int $userId, int $recipeId): bool
+{
+    $pdo = connexionBdd();
+    $sql = "INSERT INTO users_recipes (user_id, recipe_id, aime) VALUES (:userId, :recipeId, 0)
+            ON DUPLICATE KEY UPDATE aime = 0";
+    $request = $pdo->prepare($sql);
+    $result = $request->execute(array(':userId' => $userId, ':recipeId' => $recipeId));
+
+    return $result;
+}
+
+
+
+//   FONCTION POUR RECUPERER LES RECETTES BLACKLISTEES D'UN UTILISATEUR
+
+function allBlacklistRecipes(int $userId): array
+{
+    $pdo = connexionBdd();
+    $sql = "SELECT ur.recipe_id, r.name FROM users_recipes ur 
+            JOIN recipes r ON ur.recipe_id = r.id 
+            WHERE ur.user_id = :userId AND ur.aime = 0";
+    $request = $pdo->prepare($sql);
+    $request->execute([':userId' => $userId]);
+
+    $blacklistRecipes = $request->fetchAll(PDO::FETCH_ASSOC);
+
+    return $blacklistRecipes;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// *********************************************************************
+
+
+//   POUR AJOUTER UN MENU A LA TABLE MENUS
+
+function addMenu(int $user_id, int $jours, int $pers)
+{
+    $pdo = connexionBdd();
+    $sql = "INSERT INTO menus (user_id, nb_jours, nb_pers) VALUES (:user_id, :nb_jours, :nb_pers)";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([
+        ':user_id' => $user_id,
+        ':nb_jours' => $jours,
+        ':nb_pers' => $pers
+    ]);
+    return $pdo->lastInsertId(); // Retourne l'ID du menu inséré
+}
+
+
+
+
+
+
+//    RECUPERER LES RECETTES DU FORMULAIRE 
+
+
+function getRecipesForm($season, $price, $time, $categories, $nb_jours): array
+{
+    // Connexion à la base de données
+    $pdo = connexionBdd();
+
+    // Création de la clause IN pour les catégories
+    $categories = [];
+    // $categories_placeholder = implode(',', array_fill(0, count($categories), ':'));
+    $categories_placeholders = [];
+    foreach ($categories as $index => $category) {
+        $categories_placeholders[] = ":category_$index";
+    }
+    $categories_placeholder = implode(',', $categories_placeholders);
+
+    // Préparation de la requête SQL
+    $sql = "(
+        SELECT r.* FROM recipes r
+        JOIN recipe_category rc ON r.id = rc.recipe_id
+        WHERE r.typePlat = 'entree' 
+        AND r.season = :season
+        AND r.price = :price
+        AND r.time = :time";
+
+    if (!empty($categories) && is_array($categories)) {
+        $sql .= " AND rc.category_id IN ($categories_placeholder)";
+    }
+
+    $sql .= " LIMIT :nb_jours
+    )
+    UNION
+    (
+        SELECT r.* FROM recipes r
+        JOIN recipe_category rc ON r.id = rc.recipe_id
+        WHERE r.typePlat = 'plat' 
+        AND r.season = :season
+        AND r.price = :price
+        AND r.time = :time";
+
+    if (!empty($categories) && is_array($categories)) {
+        $sql .= " AND rc.category_id IN ($categories_placeholder)";
+    }
+
+    $sql .= " LIMIT :nb_jours
+    )
+    UNION
+    (
+        SELECT r.* FROM recipes r
+        JOIN recipe_category rc ON r.id = rc.recipe_id
+        WHERE r.typePlat = 'dessert' 
+        AND r.season = :season
+        AND r.price = :price
+        AND r.time = :time";
+
+    if (!empty($categories) && is_array($categories)) {
+        $sql .= " AND rc.category_id IN ($categories_placeholder)";
+    }
+
+    $sql .= " LIMIT :nb_jours
+    );";
+
+    // Préparation de la requête
+    $stmt = $pdo->prepare($sql);
+
+    // Liaison des paramètres
+    $stmt->bindParam(':season', $season);
+    $stmt->bindParam(':price', $price);
+    $stmt->bindParam(':time', $time);
+
+    // Liaison des paramètres pour les catégories
+    if (!empty($categories) && is_array($categories)) {
+        foreach ($categories as $index => $category) {
+            $param_name = ":category_$index";
+            $stmt->bindParam($param_name, $category);
+        }
+    }
+
+    $stmt->bindParam(':nb_jours', $nb_jours, PDO::PARAM_INT);
+
+    // Exécution de la requête
+    $stmt->execute();
+
+    // Récupération des résultats
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $result;
+}
+
+
+
+
+
+
+//   INSERER LES RECETTES DANS LA TABLE MENUS_RECETTES
+
+
+function insertRecipesToMenu($menu_id, $recipes): bool
+{
+    // Connexion à la base de données
+    $pdo = connexionBdd();
+    $sql = "INSERT INTO menu_recettes (menu_id, recipe_id) VALUES (:menu_id, :recipe_id)";
+    $stmt = $pdo->prepare($sql);
+    foreach ($recipes as $recipe) {
+        $result = $stmt->execute([
+            ':menu_id' => $menu_id,
+            ':recipe_id' => $recipe['id']
+        ]);
+        // Vérifier si l'insertion a réussi pour chaque recette
+        if (!$result) {
+            return false; // Retourner false si une insertion a échoué
+        }
+    }
+    return true; // Retourner true si toutes les insertions ont réussi
+}
+
+
+
+
+
+
+
+//   POUR AFFICHER LES MENUS D'UN UTILISATEUR
+
+
+// function showMenu(int $menu_id): mixed
+// {
+//     $pdo = connexionBdd(); // Assurez-vous d'avoir une fonction pour la connexion à la BDD
+
+//     // Récupérez les détails du menu
+//     $sqlMenu = "SELECT nb_jours, nb_pers 
+//     FROM menus 
+//     WHERE id = :menu_id";
+//     $stmtMenu = $pdo->prepare($sqlMenu);
+//     $stmtMenu->execute([':menu_id' => $menu_id]);
+//     $menuDetails = $stmtMenu->fetch();
+
+//     // Vérifiez si le menu existe
+//     if ($menuDetails) {
+
+//         // Récupérez les recettes associées au menu
+//         $sqlRecipes = "SELECT r.name 
+//         FROM menu_recettes mr
+//         JOIN recipes r 
+//         ON mr.recipe_id = r.id
+//         WHERE mr.menu_id = :menu_id";
+//         $stmtRecipes = $pdo->prepare($sqlRecipes);
+//         $stmtRecipes->execute([':menu_id' => $menu_id]);
+//         $recipes = $stmtRecipes->fetchAll();
+
+//         return $recipes;
+//     }
+// }

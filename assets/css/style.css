@@ -83,52 +83,83 @@ nav {
     justify-content: center;
     align-items: center;
 
+
     .card {
-        max-width: 50%;
-        min-height: 60vh;
+        max-width: 40%;
+        min-height: 70vh;
         background-color: #add6cfb5;
         position: relative;
         border-radius: 20px;
         border: none;
 
-        .people {
+        .days {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .days input[type=button]:hover {
+                color: black;
+                font-weight: bold;
+                background-color: transparent !important;
+            }
+
+            .days span {
+
+                font-size: 15px;
+                color: black;
+            }
+
+            .days input[type=button],
+            input[type=text] {
+                display: inline-block;
+                width: 50px;
+                background-color: transparent !important;
+                outline: none;
+                border: none;
+                text-align: center;
+                cursor: pointer;
+                padding: 0px;
+                color: black;
+                height: 33px;
+                font-family: 'Open Sans';
+            }
+            .minusBtn, .plusBtn{
+                background-color: transparent;
+                outline: none;
+                border: none;
+            }
+        }
+
+        .people, .days {
 
             input[type="range"] {
                 -webkit-appearance: none;
                 appearance: none;
                 background: transparent;
                 cursor: pointer;
-                width: 12rem;
+                width: 50%;
             }
 
-            /* Removes default focus */
             input[type="range"]:focus {
                 outline: none;
             }
 
             /***** Chrome, Safari, Opera and Edge Chromium styles *****/
-            /* slider track */
+
             input[type="range"]::-webkit-slider-runnable-track {
                 background-color: #E7F1EF;
                 border-radius: 0.5rem;
                 height: 0.5rem;
             }
-
-            /* slider thumb */
             input[type="range"]::-webkit-slider-thumb {
                 -webkit-appearance: none;
                 appearance: none;
                 margin-top: -4px;
-
-                /* Centers thumb on the track */
-
-                /*custom styles*/
                 background-color: var(--orange);
                 height: 1rem;
                 width: 1rem;
                 border-radius: 100%;
             }
-
             input[type="range"]:focus::-webkit-slider-thumb {
                 border: 1px solid #E7F1EF;
                 outline: 3px solid #E7F1EF;
@@ -136,25 +167,18 @@ nav {
             }
 
             /******** Firefox styles ********/
-            /* slider track */
             input[type="range"]::-moz-range-track {
                 background-color: #E7F1EF;
                 border-radius: 0.5rem;
                 height: 0.5rem;
             }
-
-            /* slider thumb */
             input[type="range"]::-moz-range-thumb {
                 border: none;
-                /*Removes extra border that FF applies*/
-
-                /*custom styles*/
                 background-color: var(--orange);
                 height: 1rem;
                 width: 1rem;
                 border-radius: 100%;
             }
-
             input[type="range"]:focus::-moz-range-thumb {
                 border: 1px solid #E7F1EF;
                 outline: 3px solid #E7F1EF;
@@ -197,13 +221,9 @@ nav {
         }
 
         .btnOptions {
-            position: relative;
-
-            .bi-arrow-right-square {
-                position: absolute;
-                top: 2px;
-                right: -20px;
-                font-size: 1.5rem;
+            &:hover{
+                background-color: rgba(255, 255, 255, 0.562) !important;
+                border: 1px solid var(--black);
             }
         }
 
@@ -245,6 +265,10 @@ nav {
             left: 50%;
             transform: translateX(-50%);
             margin-bottom: -20px;
+
+            &:hover{
+                zoom: 1.2;
+            }
 
         }
 
@@ -375,7 +399,7 @@ nav {
     th,
     tr,
     td {
-        background-color: var(--blue) !important;
+        background-color: var(--yellow) !important;
     }
 
     .btnRole {
@@ -393,7 +417,7 @@ nav {
     th,
     tr,
     td {
-        background-color: var(--blue) !important;
+        background-color: var(--yellow) !important;
     }
 }
 
@@ -424,7 +448,7 @@ nav {
 }
 
 .gestionRecipes {
-    background-color: var(--blue) !important;
+    background-color: var(--yellow) !important;
 
     h2 {
         margin-top: 100px;
@@ -433,10 +457,10 @@ nav {
 }
 
 #ingredientsContainer {
-    background-color: var(--blue) !important;
+    background-color: var(--yellow) !important;
 
     input {
-        background-color: var(--blue) !important;
+        background-color: var(--yellow) !important;
     }
 }
 
@@ -450,7 +474,7 @@ nav {
 #profil,
 #dashboard {
 
-    background-color: var(--blue);
+    background-color: var(--yellow);
 
 
     .avatar-img {
@@ -551,6 +575,19 @@ nav {
     }
 }
 
+.userFav {
+    min-height: 50vh;
+}
+
+
+
+
+
+
+
+
+
+
 
 /*   LES RECETTES */
 
@@ -561,15 +598,16 @@ nav {
     .recettesDiv {
         margin-top: 100px;
 
-        a{
+        a {
             color: var(--black);
         }
+
         .btn:hover {
             background-color: var(--orange);
             color: white !important;
             border: none;
 
-            a{
+            a {
                 color: white;
             }
         }
@@ -583,30 +621,34 @@ nav {
         margin: 5px;
     }
 
-    .favParent{
+    .favParent {
         transition: 1s ease-in-out;
 
         .btn:hover {
-        background-color: var(--orange);
-        color: white !important;
-        border: none;
+            background-color: var(--orange);
+            color: white !important;
+            border: none;
+        }
+
+        .iconFav:hover {
+            color: var(--orange) !important;
+        }
     }
 
-    .iconFav:hover {
-        color: var(--orange) !important;
-    }
-    }
 
-    
 
 }
 
-#showRecipe{
-    margin-top: 200px;
+#showRecipe {
+    margin-top: 150px;
     min-height: 100vh;
 
     .iconFav:hover {
         color: var(--orange) !important;
+    }
+
+    .img-ingredients {
+        width: 50px;
     }
 }
 

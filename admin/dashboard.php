@@ -28,7 +28,7 @@ if(!empty($_GET['action']) && $_GET['action'] == 'update' && !empty($_GET['id'])
 
 
 if( !isset($_SESSION['user'])){
-    header("location:".RACINE_SITE."identifications.php");
+    header("location:".RACINE_SITE."identification.php");
 }else{
     if($_SESSION['user']['role'] == 'user'){
         header("location:".RACINE_SITE."index.php");
@@ -57,7 +57,7 @@ require_once "../inc/header.inc.php";
 
 
 
-        <div class="onglets row container wrap mx-auto">
+        <div class="onglets row container mx-auto">
             <!-- Les onglets du menu -->
             <div class="onglet col-lg-2 col-md-4 col-sm-12"><a href="?users_php">Utilisateurs</a></div>
             <div class="onglet col-lg-2 col-md-4 col-sm-12"><a href="?recipes_php">Recettes</a></div>

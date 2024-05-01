@@ -18,21 +18,20 @@ $info = '';
 if (!empty($_POST)) {
 
 
-    debug($_POST);
 
     $verif = true;
 
 
     foreach ($_POST as $value) {
 
-        
 
 
-        if (!isset($_POST['name']) || (strlen($_POST['name']) < 3 && trim($_POST['name'])) || !preg_match('/^[a-zA-Z0-9 ]*$/', $_POST['name'])) {
+
+        // if (!isset($_POST['name']) || (strlen($_POST['name']) < 3 && trim($_POST['name'])) || !preg_match('/^[a-zA-Z0-9 ]*$/', $_POST['name'])) {
 
 
-            $info .= alert("Le nom n'est pas valide", "danger");
-        }
+        //     $info .= alert("Le nom n'est pas valide", "danger");
+        // }
 
 
         // if (!isset($_POST['slug']) || (strlen($_POST['slug']) < 3 && trim($_POST['slug'])) || !preg_match('/^[a-zA-Z0-9-]+$/', $_POST['slug'])) {
@@ -54,10 +53,9 @@ if (!empty($_POST)) {
             $slug = htmlentities(trim($_POST['slug']));
             $image = $_FILES['image']['name'] ?? '';
             $instructions = htmlentities(trim($_POST['instructions']));
-            $repas = $_POST['repas'] ?? 'all';
             $typePlat = $_POST['typePlat'] ?? '';
             $season = $_POST['season'] ?? 'all';
-            $price = $_POST['price'] ?? 'all';
+            $price = $_POST['price'] ?? '';
             $time = $_POST['time'] ?? 'all';
             $categories = isset($_POST['categories']) ? array_values($_POST['categories']) : [];
             $ingredients = $_POST['ingredients'] ?? [];
@@ -66,12 +64,12 @@ if (!empty($_POST)) {
 
             move_uploaded_file($_FILES['image']['tmp_name'], '../assets/img/' . $image);
 
-            addRecipe($name, $slug, $image, $instructions, $repas, $typePlat, $season, $price, $time, $categories, $ingredients);
+            addRecipe($name, $slug, $image, $instructions, $typePlat, $season, $price, $time, $categories, $ingredients);
 
-            $info = alert('Catégorie ajoutée avec succès!', 'success');
         }
-
+        
         header('location:dashboard.php?recipes_php');
+        $info = alert('Recette ajoutée avec succès!', 'success');
     }
 }
 
@@ -139,6 +137,7 @@ require_once "../inc/header.inc.php";
             <?php
 
             $ingredients = allIngredients();
+            debug($_POST);
 
             foreach ($ingredients as $ingredient) {
 
@@ -148,7 +147,9 @@ require_once "../inc/header.inc.php";
                 <div class="row">
 
                     <div class="col-4">
-                        <input type="checkbox" id="ingredient-<?= $ingredient['id'] ?>" class="form-check-input" name="ingredients[<?= $ingredient['id'] ?>]">
+                        <input type="hidden" name="ingredients[<?= $ingredient['id'] ?>][id]" value="<?= $ingredient['id'] ?>">
+                        <input type="checkbox" id="ingredient-<?= $ingredient['id'] ?>" class="form-check-input" name="ingredients[<?= $ingredient['id'] ?>][checked]">
+
                         <label for="ingredient-<?= $ingredient['id'] ?>"><?= $ingredient['name'] ?></label>
                     </div>
 
@@ -174,22 +175,7 @@ require_once "../inc/header.inc.php";
 
         <div class="row mt-5 ms-3">
 
-            <div class="col-md-4">
-                <label for="repas" class="fw-bolder fs-5 mb-3">Repas</label>
-
-                <div class="form-check col-sm-6 col-md-4">
-                    <input type="radio" name="repas" class="form-check-input" id="flexRadio1" value="dejeuner">
-                    <label class="form-check-label" for="flexRadio1">Déjeuner</label>
-                </div>
-
-                <div class="form-check col-sm-6 col-md-4">
-                    <input type="radio" name="repas" class="form-check-input" id="flexRadio2" value="diner">
-                    <label class="form-check-label" for="flexRadio2">Dîner</label>
-                </div>
-            </div>
-
-
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <label for="typePlat" class="fw-bolder fs-5 mb-3">Type de plat ( requis )</label>
 
                 <div class="form-check col-sm-4 col-md-4">
@@ -210,7 +196,8 @@ require_once "../inc/header.inc.php";
                     <label class="form-check-label" for="flexRadio5">Dessert</label>
                 </div>
             </div>
-            <div class="col-md-4">
+
+            <div class="col-md-6">
                 <label for="season" class="fw-bold fs-5 mb-3">Saison</label>
 
                 <div class="form-check col-sm-4 col-md-4">
