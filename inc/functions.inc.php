@@ -379,8 +379,6 @@ function updateRecipe(int $id, string $name, string $slug, string $image, string
             ':recipeId' => $id,
             ':categoryId' => $categoryId
         ));
-
-
     }
 
 
@@ -403,44 +401,6 @@ function updateRecipe(int $id, string $name, string $slug, string $image, string
         }
     }
 
-
-
-
-                
-
-
-    // $request = $pdo->prepare("DELETE FROM recipe_category WHERE recipe_id = :id");
-    // $request->execute([':id' => $id]);
-    // foreach ($categories as $categoryId) {
-    //     $sql = "INSERT INTO recipe_category (recipe_id, category_id) VALUES (:id, :categoryId)";
-    //     $request = $pdo->prepare($sql);
-    //     $request->execute(array(
-    //         ':id' => $id,
-    //         ':categoryId' => $categoryId
-    //     ));
-    // }
-
-
-    // $request = $pdo->prepare("DELETE FROM recipe_ingredients WHERE recipe_id = :id");
-    // $request->execute([':id' => $id]);
-    // foreach ($ingredients as $ingredientId => $ingredientInfo) {
-
-    //     if (isset($ingredientInfo['checked'])) {
-
-    //         $quantity = floatval($ingredientInfo['quantity']);
-    //         $unity = $ingredientInfo['unity'];
-
-    //         $sql = "INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unity) VALUES (:id, :ingredientId, :quantity, :unity)";
-
-    //         $request = $pdo->prepare($sql);
-    //         $request->execute(array(
-    //             ':id' => $id,
-    //             ':ingredientId' => $ingredientId,
-    //             ':quantity' => $quantity,
-    //             ':unity' => $unity
-    //         ));
-    //     }
-    // }
 }
 
 
@@ -503,7 +463,7 @@ function showRecipe(int $recipe_id): mixed
 function showIngredientsRecipe(int $id): mixed
 {
     $pdo = connexionBdd();
-    $sql = "SELECT recipe_ingredients.*, ingredients.name AS ingredient, ingredients.image AS image
+    $sql = "SELECT recipe_ingredients.*, ingredients.name AS ingredient
     FROM recipe_ingredients
     LEFT JOIN ingredients
     ON recipe_ingredients.ingredient_id = ingredients.id
@@ -623,7 +583,7 @@ function allIngredients(): array
 {
 
     $pdo = connexionBdd();
-    $sql = "SELECT * FROM ingredients";
+    $sql = "SELECT * FROM ingredients ORDER BY id DESC";
     $request = $pdo->query($sql);
     $result = $request->fetchAll();
     return $result;
@@ -632,35 +592,35 @@ function allIngredients(): array
 
 //   AJOUTER UN INGREDIENT
 
-function addIngredient(string $name, string $image): void
-{
-
+function addIngredient(string $name): string {
     $pdo = connexionBdd();
-
-    $sql = "INSERT INTO ingredients (name, image) VALUES (:name, :image)";
-
-    $request = $pdo->prepare($sql);
-    $request->execute(array(
-
-        ':name' => $name,
-        ':image' => $image
-    ));
+    try {
+        $sql = "INSERT INTO ingredients (name) VALUES (:name)";
+        $request = $pdo->prepare($sql);
+        $request->execute(array(':name' => $name));
+        return "L'ingrédient a été ajouté avec succès.";
+    } catch (PDOException $e) {
+        if ($e->getCode() == '23000' && strpos($e->getMessage(), 'Duplicate entry') !== false) {
+            return "L'ingrédient existe déjà.";
+        } else {
+            return "Erreur : " . $e->getMessage();
+        }
+    }
 }
 
 
 
 //   MODIFIER UN INGREDIENT
 
-function updateIngredient(int $id, string $name, string $image): void
+function updateIngredient(int $id, string $name): void
 {
     $pdo = connexionBdd();
-    $sql = "UPDATE ingredients SET name = :name, image = :image WHERE id = :id";
+    $sql = "UPDATE ingredients SET name = :name WHERE id = :id";
 
     $request = $pdo->prepare($sql);
     $request->execute(array(
         ':id' => $id,
-        ':name' => $name,
-        ':image' => $image
+        ':name' => $name
     ));
 }
 
@@ -872,96 +832,297 @@ function addMenu(int $user_id, int $jours, int $pers)
 
 
 
-
-
 //    RECUPERER LES RECETTES DU FORMULAIRE 
 
 
-function getRecipesForm($season, $price, $time, $categories, $nb_jours): array
+// function getEntrees($season, $price, $time, $categories, $nb_jours): array
+// {
+//     $pdo = connexionBdd();
+
+//     // Vérifiez que $categories n'est pas vide
+//     if (empty($categories)) {
+//         // Gérez l'erreur ou retournez un tableau vide
+//         return [];
+//     }
+
+//     // Construisez la partie IN de la requête avec des paramètres nommés
+//     $inParams = [];
+//     foreach ($categories as $index => $value) {
+//         $inParams[] = ':category' . $index;
+//     }
+//     $in  = implode(', ', $inParams);
+
+//     // Préparez la requête SQL
+//     $requete = $pdo->prepare("
+//         SELECT DISTINCT r.id, r.name, r.season, r.price, r.time
+//         FROM recipes r
+//         JOIN recipe_category rc ON r.id = rc.recipe_id
+//         WHERE r.typePlat = 'entree'
+//         AND r.price = :price
+//         AND r.time = :time
+//         AND r.season = :season
+//         AND rc.category_id IN ($in)
+//         ORDER BY RAND()
+//         LIMIT :nb_jours
+//     ");
+
+//     // Vérifiez que $nb_jours est un entier positif
+//     if (!is_numeric($nb_jours) || $nb_jours <= 0) {
+//         // Gérez l'erreur ou définissez une valeur par défaut
+//         $nb_jours = 1;
+//     }
+
+//     // Liez les paramètres nommés pour la saison, le prix, le temps et le nombre de jours
+//     $requete->bindParam(':season', $season);
+//     $requete->bindParam(':price', $price);
+//     $requete->bindParam(':time', $time);
+//     $requete->bindValue(':nb_jours', (int) $nb_jours, PDO::PARAM_INT);
+
+//     // Liez les paramètres nommés pour les catégories
+//     foreach ($inParams as $index => $param) {
+//         $requete->bindValue($param, $categories[$index]);
+//     }
+
+//     // Exécutez la requête
+//     $requete->execute();
+//     return $requete->fetchAll(PDO::FETCH_ASSOC);
+// }
+
+
+
+// function getPlats($season, $price, $time, $categories, $nb_jours): array
+// {
+//     $pdo = connexionBdd();
+
+//     // Vérifiez que $categories n'est pas vide
+//     if (empty($categories)) {
+//         // Gérez l'erreur ou retournez un tableau vide
+//         return [];
+//     }
+
+//     // Construisez la partie IN de la requête avec des paramètres nommés
+//     $inParams = [];
+//     foreach ($categories as $index => $value) {
+//         $inParams[] = ':category' . $index;
+//     }
+//     $in  = implode(', ', $inParams);
+
+//     // Préparez la requête SQL
+//     $requete = $pdo->prepare("
+//         SELECT DISTINCT r.id, r.name, r.season, r.price, r.time
+//         FROM recipes r
+//         JOIN recipe_category rc ON r.id = rc.recipe_id
+//         WHERE r.typePlat = 'plat'
+//         AND r.price = :price
+//         AND r.time = :time
+//         AND r.season = :season
+//         AND rc.category_id IN ($in)
+//         ORDER BY RAND()
+//         LIMIT :nb_jours
+//     ");
+
+//     // Vérifiez que $nb_jours est un entier positif
+//     if (!is_numeric($nb_jours) || $nb_jours <= 0) {
+//         // Gérez l'erreur ou définissez une valeur par défaut
+//         $nb_jours = 1;
+//     }
+
+//     // Liez les paramètres nommés pour la saison, le prix, le temps et le nombre de jours
+//     $requete->bindParam(':season', $season);
+//     $requete->bindParam(':price', $price);
+//     $requete->bindParam(':time', $time);
+//     $requete->bindValue(':nb_jours', (int) $nb_jours, PDO::PARAM_INT);
+
+//     // Liez les paramètres nommés pour les catégories
+//     foreach ($inParams as $index => $param) {
+//         $requete->bindValue($param, $categories[$index]);
+//     }
+
+//     // Exécutez la requête
+//     $requete->execute();
+//     return $requete->fetchAll(PDO::FETCH_ASSOC);
+// }
+
+
+// function getDesserts($season, $price, $time, $categories, $nb_jours): array
+// {
+//     $pdo = connexionBdd();
+
+//     // Vérifiez que $categories n'est pas vide
+//     if (empty($categories)) {
+//         // Gérez l'erreur ou retournez un tableau vide
+//         return [];
+//     }
+
+//     // Construisez la partie IN de la requête avec des paramètres nommés
+//     $inParams = [];
+//     foreach ($categories as $index => $value) {
+//         $inParams[] = ':category' . $index;
+//     }
+//     $in  = implode(', ', $inParams);
+
+//     // Préparez la requête SQL
+//     $requete = $pdo->prepare("
+//         SELECT DISTINCT r.id, r.name, r.season, r.price, r.time
+//         FROM recipes r
+//         JOIN recipe_category rc ON r.id = rc.recipe_id
+//         WHERE r.typePlat = 'dessert'
+//         AND r.price = :price
+//         AND r.time = :time
+//         AND r.season = :season
+//         AND rc.category_id IN ($in)
+//         ORDER BY RAND()
+//         LIMIT :nb_jours
+//     ");
+
+//     // Vérifiez que $nb_jours est un entier positif
+//     if (!is_numeric($nb_jours) || $nb_jours <= 0) {
+//         // Gérez l'erreur ou définissez une valeur par défaut
+//         $nb_jours = 1;
+//     }
+
+//     // Liez les paramètres nommés pour la saison, le prix, le temps et le nombre de jours
+//     $requete->bindParam(':season', $season);
+//     $requete->bindParam(':price', $price);
+//     $requete->bindParam(':time', $time);
+//     $requete->bindValue(':nb_jours', (int) $nb_jours, PDO::PARAM_INT);
+
+//     // Liez les paramètres nommés pour les catégories
+//     foreach ($inParams as $index => $param) {
+//         $requete->bindValue($param, $categories[$index]);
+//     }
+
+//     // Exécutez la requête
+//     $requete->execute();
+//     return $requete->fetchAll(PDO::FETCH_ASSOC);
+// }
+
+
+// function getRecipesByType($mealType, $season, $price, $time, $categories, $nb_jours): array
+// {
+//     $pdo = connexionBdd();
+
+//     // Construisez la partie IN de la requête avec des paramètres nommés
+//     $inParams = [];
+//     $in = '';
+//     if (!empty($categories)) {
+//         foreach ($categories as $index => $value) {
+//             $inParams[] = ':category' . $index;
+//         }
+//         $in  = implode(', ', $inParams);
+//     }
+
+//     // Préparez la requête SQL
+//     $sql = "
+//         SELECT DISTINCT r.id, r.name, r.season, r.price, r.time
+//         FROM recipes r
+//         JOIN recipe_category rc ON r.id = rc.recipe_id
+//         WHERE r.typePlat = :mealType
+//         AND r.price = :price
+//         AND r.time = :time
+//         AND r.season = :season ";
+    
+//     // Ajouter la clause IN si des catégories sont sélectionnées
+//     if (!empty($in)) {
+//         $sql .= "AND rc.category_id IN ($in) ";
+//     }
+    
+//     // Ajouter la clause LIMIT
+//     $sql .= "ORDER BY RAND() LIMIT :nb_jours";
+
+//     // Préparation de la requête
+//     $requete = $pdo->prepare($sql);
+
+//     // Liaison des paramètres
+//     $requete->bindParam(':mealType', $mealType);
+//     $requete->bindParam(':season', $season);
+//     $requete->bindParam(':price', $price);
+//     $requete->bindParam(':time', $time);
+//     $requete->bindValue(':nb_jours', (int) $nb_jours, PDO::PARAM_INT);
+
+//     // Liaison des paramètres pour les catégories si elles existent
+//     foreach ($inParams as $index => $param) {
+//         $requete->bindValue($param, $categories[$index]);
+//     }
+
+//     // Exécution de la requête
+//     $requete->execute();
+//     return $requete->fetchAll(PDO::FETCH_ASSOC);
+// }
+
+
+function getRecipesByType($mealType, $season, $price, $time, $categories, $nb_jours): array
 {
-    // Connexion à la base de données
     $pdo = connexionBdd();
 
-    // Création de la clause IN pour les catégories
-    $categories = [];
-    // $categories_placeholder = implode(',', array_fill(0, count($categories), ':'));
-    $categories_placeholders = [];
-    foreach ($categories as $index => $category) {
-        $categories_placeholders[] = ":category_$index";
+    // Construire la partie IN de la requête avec des paramètres nommés pour les catégories
+    $inParams = [];
+    $in = '';
+    if (!empty($categories)) {
+        foreach ($categories as $index => $value) {
+            $inParams[] = ':category' . $index;
+        }
+        $in = implode(', ', $inParams);
     }
-    $categories_placeholder = implode(',', $categories_placeholders);
 
-    // Préparation de la requête SQL
-    $sql = "(
-        SELECT r.* FROM recipes r
+    // Préparer la requête SQL
+    $sql = "
+        SELECT DISTINCT r.id, r.name, r.season, r.price, r.time
+        FROM recipes r
         JOIN recipe_category rc ON r.id = rc.recipe_id
-        WHERE r.typePlat = 'entree' 
-        AND r.season = :season
-        AND r.price = :price
-        AND r.time = :time";
-
-    if (!empty($categories) && is_array($categories)) {
-        $sql .= " AND rc.category_id IN ($categories_placeholder)";
+        WHERE r.typePlat = :mealType ";
+    
+    // Ajouter la clause pour la saison si elle est sélectionnée
+    if (!empty($season)) {
+        $sql .= "AND r.season = :season ";
     }
 
-    $sql .= " LIMIT :nb_jours
-    )
-    UNION
-    (
-        SELECT r.* FROM recipes r
-        JOIN recipe_category rc ON r.id = rc.recipe_id
-        WHERE r.typePlat = 'plat' 
-        AND r.season = :season
-        AND r.price = :price
-        AND r.time = :time";
-
-    if (!empty($categories) && is_array($categories)) {
-        $sql .= " AND rc.category_id IN ($categories_placeholder)";
+    // Ajouter la clause pour le prix si il est sélectionné
+    if (!empty($price)) {
+        $sql .= "AND r.price = :price ";
     }
 
-    $sql .= " LIMIT :nb_jours
-    )
-    UNION
-    (
-        SELECT r.* FROM recipes r
-        JOIN recipe_category rc ON r.id = rc.recipe_id
-        WHERE r.typePlat = 'dessert' 
-        AND r.season = :season
-        AND r.price = :price
-        AND r.time = :time";
-
-    if (!empty($categories) && is_array($categories)) {
-        $sql .= " AND rc.category_id IN ($categories_placeholder)";
+    // Ajouter la clause pour le temps si il est sélectionné
+    if (!empty($time)) {
+        $sql .= "AND r.time = :time ";
     }
-
-    $sql .= " LIMIT :nb_jours
-    );";
+    
+    // Ajouter la clause IN pour les catégories si elles sont sélectionnées
+    if (!empty($in)) {
+        $sql .= "AND rc.category_id IN ($in) ";
+    }
+    
+    // Ajouter la clause LIMIT
+    $sql .= "ORDER BY RAND() LIMIT :nb_jours";
 
     // Préparation de la requête
-    $stmt = $pdo->prepare($sql);
+    $requete = $pdo->prepare($sql);
 
     // Liaison des paramètres
-    $stmt->bindParam(':season', $season);
-    $stmt->bindParam(':price', $price);
-    $stmt->bindParam(':time', $time);
+    $requete->bindParam(':mealType', $mealType);
+    $requete->bindValue(':nb_jours', (int) $nb_jours, PDO::PARAM_INT);
 
-    // Liaison des paramètres pour les catégories
-    if (!empty($categories) && is_array($categories)) {
-        foreach ($categories as $index => $category) {
-            $param_name = ":category_$index";
-            $stmt->bindParam($param_name, $category);
-        }
+    // Liaison des paramètres pour la saison, le prix et le temps si ils sont sélectionnés
+    if (!empty($season)) {
+        $requete->bindParam(':season', $season);
+    }
+    if (!empty($price)) {
+        $requete->bindParam(':price', $price);
+    }
+    if (!empty($time)) {
+        $requete->bindParam(':time', $time);
     }
 
-    $stmt->bindParam(':nb_jours', $nb_jours, PDO::PARAM_INT);
+    // Liaison des paramètres pour les catégories si elles sont sélectionnées
+    foreach ($inParams as $index => $param) {
+        $requete->bindValue($param, $categories[$index]);
+    }
 
     // Exécution de la requête
-    $stmt->execute();
-
-    // Récupération des résultats
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    return $result;
+    $requete->execute();
+    return $requete->fetchAll(PDO::FETCH_ASSOC);
 }
+
 
 
 
@@ -971,29 +1132,70 @@ function getRecipesForm($season, $price, $time, $categories, $nb_jours): array
 //   INSERER LES RECETTES DANS LA TABLE MENUS_RECETTES
 
 
-function insertRecipesToMenu($menu_id, $recipes): bool
+function insertRecipesToMenu($menu_id, $entrees_ids, $plats_ids, $desserts_ids)
 {
-    // Connexion à la base de données
     $pdo = connexionBdd();
-    $sql = "INSERT INTO menu_recettes (menu_id, recipe_id) VALUES (:menu_id, :recipe_id)";
-    $stmt = $pdo->prepare($sql);
-    foreach ($recipes as $recipe) {
-        $result = $stmt->execute([
-            ':menu_id' => $menu_id,
-            ':recipe_id' => $recipe['id']
-        ]);
-        // Vérifier si l'insertion a réussi pour chaque recette
-        if (!$result) {
-            return false; // Retourner false si une insertion a échoué
-        }
+
+    // Insérer les entrees
+    foreach ($entrees_ids as $entree_id) {
+        $sql = "INSERT INTO menu_recettes (menu_id, recipe_id) VALUES (:menu_id, :recipe_id)";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':menu_id', $menu_id, PDO::PARAM_INT);
+        $stmt->bindParam(':recipe_id', $entree_id, PDO::PARAM_INT);
+        $stmt->execute();
     }
-    return true; // Retourner true si toutes les insertions ont réussi
+
+    // Insérer les plats
+    foreach ($plats_ids as $plat_id) {
+        $sql = "INSERT INTO menu_recettes (menu_id, recipe_id) VALUES (:menu_id, :recipe_id)";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':menu_id', $menu_id, PDO::PARAM_INT);
+        $stmt->bindParam(':recipe_id', $plat_id, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+
+    // Insérer les desserts
+    foreach ($desserts_ids as $dessert_id) {
+        $sql = "INSERT INTO menu_recettes (menu_id, recipe_id) VALUES (:menu_id, :recipe_id)";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':menu_id', $menu_id, PDO::PARAM_INT);
+        $stmt->bindParam(':recipe_id', $dessert_id, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+}
+
+
+
+function getMenuInfoById($menu_id)
+{
+    $pdo = connexionBdd();
+
+    $sql = "SELECT nb_jours, nb_pers FROM menus WHERE id = :menu_id";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':menu_id', $menu_id, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
 
 
 
+function getRecipeNamesForMenu($menu_id)
+{
+    $pdo = connexionBdd();
+    $sql = "
+        SELECT r.name
+        FROM recipes r
+        INNER JOIN menu_recettes mr ON r.id = mr.recipe_id
+        WHERE mr.menu_id = :menu_id
+    ";
 
+    $requete = $pdo->prepare($sql);
+    $requete->bindParam(':menu_id', $menu_id, PDO::PARAM_INT);
+    $requete->execute();
+    return $requete->fetchAll(PDO::FETCH_ASSOC);
+}
 
 
 //   POUR AFFICHER LES MENUS D'UN UTILISATEUR

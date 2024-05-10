@@ -174,8 +174,6 @@ require_once "inc/header.inc.php";
                     <label for="showpassConfirm" class="text-danger"><input type="checkbox" onclick="showPass()" id="showpassConfirm">Afficher/masquer le mot de passe</label>
                 </div>
                 
-
-
                 <div class="d-flex justify-content-center my-5">
                     <button type="submit">S'inscrire</button>
                 </div>

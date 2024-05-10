@@ -137,7 +137,7 @@ require_once "../inc/header.inc.php";
             <?php
 
             $ingredients = allIngredients();
-            debug($_POST);
+            // debug($_POST);
 
             foreach ($ingredients as $ingredient) {
 

@@ -36,18 +36,18 @@ if (!empty($_POST)) {
     foreach ($_POST as $value) {
 
 
-        // if (!isset($_POST['name']) || (strlen($_POST['name']) < 3 && trim($_POST['name'])) || !preg_match('/^[a-zA-Z0-9 ]*$/', $_POST['name'])) {
+        if (!isset($_POST['name']) || (strlen($_POST['name']) < 3 && trim($_POST['name'])) || !preg_match('/^[a-zA-Z0-9 ]*$/', $_POST['name'])) {
 
 
-        //     $info .= alert("Le nom n'est pas valide", "danger");
-        // }
+            $info .= alert("Le nom n'est pas valide", "danger");
+        }
 
 
-        // if (!isset($_POST['slug']) || (strlen($_POST['slug']) < 3 && trim($_POST['slug'])) || !preg_match('/^[a-zA-Z0-9-]+$/', $_POST['slug'])) {
+        if (!isset($_POST['slug']) || (strlen($_POST['slug']) < 3 && trim($_POST['slug'])) || !preg_match('/^[a-zA-Z0-9-]+$/', $_POST['slug'])) {
 
 
-        //     $info .= alert("Le slug n'est pas valide", "danger");
-        // }
+            $info .= alert("Le slug n'est pas valide", "danger");
+        }
 
         if (!isset($_POST['instructions']) || strlen($_POST['instructions']) < 50) {
 
@@ -71,19 +71,17 @@ if (!empty($_POST)) {
             $id = $_POST['id'] ?? '';
 
 
-            // if (isset($_GET['action']) && $_GET['action'] == 'update' && isset($_GET['id'])) {
 
-                // debug($_FILES);
-                move_uploaded_file($_FILES['image']['tmp_name'], '../assets/img/' . $image);
 
-                // debug($ingredients);
+            // debug($_FILES);
+            move_uploaded_file($_FILES['image']['tmp_name'], '../assets/img/' . $image);
 
-                updateRecipe($id, $name, $slug, $image, $instructions, $typePlat, $season, $price, $time, $categories, $ingredients);
-            // }
+            // debug($ingredients);
 
-            header('location:dashboard.php?recipes_php');
+            updateRecipe($id, $name, $slug, $image, $instructions, $typePlat, $season, $price, $time, $categories, $ingredients);
         }
     }
+    header('location:' . RACINE_SITE . 'admin/dashboard.php?recipes_php');
 }
 
 
@@ -286,5 +284,6 @@ require_once "../inc/header.inc.php";
 
 
 <?php
+
 require_once "../inc/footer.inc.php";
 ?>

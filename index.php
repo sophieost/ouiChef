@@ -5,6 +5,7 @@ require_once "inc/functions.inc.php";
 $info = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
     // Récupération des données du formulaire
     $nb_jours = $_POST['nb_jours'];
     $nb_pers = $_POST['nb_pers'];
@@ -13,24 +14,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $season = isset($_POST['season']) ? $_POST['season'] : null;
     $categories = isset($_POST['categories']) ? $_POST['categories'] : [];
 
-    // Récupération des recettes correspondantes
-    $recipes = getRecipesForm($season, $price, $time, $categories, $nb_jours);
+
 
     $menu_id = addMenu($_SESSION['user']['id'], $nb_jours, $nb_pers);
 
+    // $id = $menu_id['id'];
 
-    // Si des recettes sont trouvées
-    if (!empty($recipes)) {
-        // Ajout du menu à la table menus
-        
-        // Redirection vers menus.php avec l'ID du menu dans l'URL
-        header("Location: " . RACINE_SITE . "menus.php?action=add&id_menu=$menu_id");
-        exit(); // Assurez-vous d'arrêter l'exécution du script après la redirection
+
+    $entrees = getRecipesByType('entree', $season, $price, $time, $categories, $nb_jours);
+    $plats = getRecipesByType('plat', $season, $price, $time, $categories, $nb_jours);
+    $desserts = getRecipesByType('dessert', $season, $price, $time, $categories, $nb_jours);
+
+
+    $entrees_ids = array_column($entrees, 'id');
+    $plats_ids = array_column($plats, 'id');
+    $desserts_ids = array_column($desserts, 'id');
+
+
+    if (empty($entrees) && empty($plats) && empty($desserts)) {
+        echo "Il n'existe aucune recette avec les critères sélectionnés.";
     } else {
-        // Redirection vers menus.php sans l'ID du menu dans l'URL
-        header("Location: " . RACINE_SITE . "menus.php");
-        exit();
+
+        insertRecipesToMenu($menu_id, $entrees_ids, $plats_ids, $desserts_ids);
+
+        // header("Location: " . RACINE_SITE . "menus.php?action=add&id_menu=" . $menu_id);
+        // exit();
     }
+
+    // debug($recipes);
+
 }
 
 
@@ -172,6 +184,8 @@ require_once "inc/header.inc.php";
                     <h2>Mes préférences</h2>
                     <div class="py-3">
                         <?php
+
+
                         $categories = allCategories();
                         foreach ($categories as $category) {
                             $categoryId = $category['id'];
@@ -215,7 +229,10 @@ require_once "inc/header.inc.php";
 </main>
 
 <?php
-
+debug($_POST);
+debug($entrees);
+debug($plats);
+debug($desserts);
 require_once "inc/footer.inc.php";
 
 ?>
