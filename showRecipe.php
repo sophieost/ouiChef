@@ -78,7 +78,7 @@ require_once "inc/header.inc.php";
 
             <li>
                 <span>Ajouter aux favoris</span>
-                <a href="recette.php?action=add&id=<?= $recipes['id'] ?>" class="linkFav"><i class="bi bi-heart fs-4 iconFav text-dark"></i></a>
+                <a href="<?=RACINE_SITE?>recette.php?action=add&id=<?= $recipes['id'] ?>" class="linkFav"><i class="bi bi-heart fs-4 iconFav text-dark"></i></a>
             </li>
         </ul>
 

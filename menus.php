@@ -98,24 +98,46 @@ require_once "inc/header.inc.php";
 
                             <?php if (!empty($entrees)) : ?>
                                 <h4>Entrée</h4>
-                                <a href="">
-                                    <p class="card-text"><?= htmlspecialchars($entrees[$jour - 1]['name']) ?></p>
-                                </a>
-                            <?php endif; ?>
+                                <?php
+                                foreach ($entrees_ids as $entreeId) {
+
+                                ?>
+                                    <a href="<?= RACINE_SITE ?>menus.php?showRecipe_php&id=<?= $entreeId ?>">
+                                        <p class="card-text"><?= htmlspecialchars($entrees[$jour - 1]['name']) ?></p>
+                                    </a>
+                            <?php
+
+                                }
+                            endif;
+
+                            ?>
 
                             <?php if (!empty($plats)) : ?>
                                 <h4>Plat</h4>
-                                <a href="">
-                                    <p class="card-text"><?= htmlspecialchars($plats[$jour - 1]['name']) ?></p>
-                                </a>
-                            <?php endif; ?>
+                                <?php
+                                foreach ($plats_ids as $platId) {
+                                ?>
+                                    <a href="<?= RACINE_SITE ?>menus.php?showRecipe_php&id=<?= $platId ?>">
+                                        <p class="card-text"><?= htmlspecialchars($plats[$jour - 1]['name']) ?></p>
+                                    </a>
+                            <?php
+                                }
+                            endif;
+
+                            ?>
 
                             <?php if (!empty($desserts)) : ?>
                                 <h4>Dessert</h4>
-                                <a href="">
-                                    <p class="card-text"><?= htmlspecialchars($desserts[$jour - 1]['name']) ?></p>
-                                </a>
-                            <?php endif; ?>
+                                <?php
+                                foreach ($desserts_ids as $dessertId) {
+                                ?>
+                                    <a href="<?= RACINE_SITE ?>menus.php?showRecipe_php&id=<?= $dessertId ?>">
+                                        <p class="card-text"><?= htmlspecialchars($desserts[$jour - 1]['name']) ?></p>
+                                    </a>
+                            <?php
+                                }
+                            endif;
+                            ?>
 
                         </div>
                     </div>
@@ -130,5 +152,14 @@ require_once "inc/header.inc.php";
 </main>
 
 <?php
+
+
+if (!empty($_GET)) {
+
+    if (isset($_GET['showRecipe_php'])) {
+        require_once "showRecipe.php";
+    }
+}
 require_once "inc/footer.inc.php";
+
 ?>

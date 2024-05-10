@@ -37,8 +37,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         insertRecipesToMenu($menu_id, $entrees_ids, $plats_ids, $desserts_ids);
 
-        // header("Location: " . RACINE_SITE . "menus.php?action=add&id_menu=" . $menu_id);
-        // exit();
+        header("Location: " . RACINE_SITE . "menus.php?action=add&id_menu=" . $menu_id);
+        exit();
     }
 
     // debug($recipes);
