@@ -28,7 +28,6 @@ if (!empty($_GET['action']) && $_GET['action'] == 'add' && !empty($_GET['id_menu
 
     $infosMenu = getMenuInfoById($menu_id);
 
-
     $nb_jours = $infosMenu['nb_jours'];
     $nb_pers = $infosMenu['nb_pers'];
     $time = isset($_POST['time']) ? $_POST['time'] : null;
@@ -36,9 +35,12 @@ if (!empty($_GET['action']) && $_GET['action'] == 'add' && !empty($_GET['id_menu
     $season = isset($_POST['season']) ? $_POST['season'] : null;
     $categories = isset($_POST['categories']) ? $_POST['categories'] : [];
 
-    $entrees = getRecipesByType('entree', $season, $price, $time, $categories, $nb_jours);
-    $plats = getRecipesByType('plat', $season, $price, $time, $categories, $nb_jours);
-    $desserts = getRecipesByType('dessert', $season, $price, $time, $categories, $nb_jours);
+    $entreesId = getRecipesByType('entree', $season, $price, $time, $categories, $nb_jours);
+    $platsId = getRecipesByType('plat', $season, $price, $time, $categories, $nb_jours);
+    $dessertsId  = getRecipesByType('dessert', $season, $price, $time, $categories, $nb_jours);
+
+
+
     // $recipes_ids = array_column($recipes, 'id');
 
     // insertRecipesToMenu($menu_id, $recipes_ids);
@@ -48,16 +50,31 @@ if (!empty($_GET['action']) && $_GET['action'] == 'add' && !empty($_GET['id_menu
 
 
     // Extraction des identifiants des recettes
-    $entrees_ids = array_column($entrees, 'id');
-    $plats_ids = array_column($plats, 'id');
-    $desserts_ids = array_column($desserts, 'id');
+
+    $entrees_ids = array_column($entreesId, 'id');
+    $plats_ids = array_column($platsId, 'id');
+    $desserts_ids = array_column($dessertsId, 'id');
 
     // Insérer les recettes dans la table menu_recettes
     // insertRecipesToMenu($menu_id, $entrees_ids, $plats_ids, $desserts_ids);
 
 
 
-    $recipeNames = getRecipeNamesForMenu($menu_id);
+    // $recipeNames = getRecipeNamesForMenu($menu_id);
+
+    $recettes = getRecipeNamesForMenu($menu_id);
+
+    $entrees = array_filter($recettes, function ($recette) {
+        return $recette['typePlat'] === 'entree';
+    });
+
+    $plats = array_filter($recettes, function ($recette) {
+        return $recette['typePlat'] === 'plat';
+    });
+
+    $desserts = array_filter($recettes, function ($recette) {
+        return $recette['typePlat'] === 'dessert';
+    });
 }
 // }
 
@@ -81,16 +98,7 @@ require_once "inc/header.inc.php";
     <section>
 
         <div class="row my-5">
-
-            <?php
-            // Afficher les recettes sélectionnées
-
-            // if (!empty($recipes)) {
-
-            for ($jour = 1; $jour <= $nb_jours; $jour++) {
-
-                // debug($recipes);
-            ?>
+            <?php for ($jour = 1; $jour <= $nb_jours; $jour++) : ?>
                 <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
                     <div class="card rounded-4">
                         <div class="card-body">
@@ -98,15 +106,12 @@ require_once "inc/header.inc.php";
 
                             <?php if (!empty($entrees)) : ?>
                                 <h4>Entrée</h4>
-                                <?php
-                                foreach ($entrees_ids as $entreeId) {
-
-                                ?>
-                                    <a href="<?= RACINE_SITE ?>menus.php?showRecipe_php&id=<?= $entreeId ?>">
-                                        <p class="card-text"><?= htmlspecialchars($entrees[$jour - 1]['name']) ?></p>
+                                <?php foreach ($entrees as $entree) { ?>
+                                    <a href="<?= RACINE_SITE ?>menus.php?showRecipe_php&id=<?= $entree['id'] ?>">
+                                        <p class="card-text"><?= htmlspecialchars($entree['name']) ?></p>
                                     </a>
-                            <?php
 
+                            <?php
                                 }
                             endif;
 
@@ -114,26 +119,23 @@ require_once "inc/header.inc.php";
 
                             <?php if (!empty($plats)) : ?>
                                 <h4>Plat</h4>
-                                <?php
-                                foreach ($plats_ids as $platId) {
-                                ?>
-                                    <a href="<?= RACINE_SITE ?>menus.php?showRecipe_php&id=<?= $platId ?>">
-                                        <p class="card-text"><?= htmlspecialchars($plats[$jour - 1]['name']) ?></p>
+                                <?php foreach ($plats as $plat) { ?>
+                                    <a href="<?= RACINE_SITE ?>menus.php?showRecipe_php&id=<?= $plat['id'] ?>">
+                                        <p class="card-text"><?= htmlspecialchars($plat['name']) ?></p>
                                     </a>
+
                             <?php
                                 }
                             endif;
-
                             ?>
 
                             <?php if (!empty($desserts)) : ?>
                                 <h4>Dessert</h4>
-                                <?php
-                                foreach ($desserts_ids as $dessertId) {
-                                ?>
-                                    <a href="<?= RACINE_SITE ?>menus.php?showRecipe_php&id=<?= $dessertId ?>">
-                                        <p class="card-text"><?= htmlspecialchars($desserts[$jour - 1]['name']) ?></p>
+                                <?php foreach ($desserts as $dessert) { ?>
+                                    <a href="<?= RACINE_SITE ?>menus.php?showRecipe_php&id=<?= $dessert['id'] ?>">
+                                        <p class="card-text"><?= htmlspecialchars($dessert['name']) ?></p>
                                     </a>
+
                             <?php
                                 }
                             endif;
@@ -142,13 +144,8 @@ require_once "inc/header.inc.php";
                         </div>
                     </div>
                 </div>
-
-            <?php
-            }
-            ?>
-
+            <?php endfor; ?>
         </div>
-    </section>
 </main>
 
 <?php

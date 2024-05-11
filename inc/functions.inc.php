@@ -961,7 +961,7 @@ function getRecipeNamesForMenu($menu_id)
 {
     $pdo = connexionBdd();
     $sql = "
-        SELECT r.name
+        SELECT r.id, r.name, r.typePlat
         FROM recipes r
         INNER JOIN menu_recettes mr ON r.id = mr.recipe_id
         WHERE mr.menu_id = :menu_id
@@ -993,7 +993,7 @@ function getRecipeNamesForMenu($menu_id)
 //     if ($menuDetails) {
 
 //         // Récupérez les recettes associées au menu
-//         $sqlRecipes = "SELECT r.name 
+//         $sqlRecipes = "SELECT r.name, r.typePlat 
 //         FROM menu_recettes mr
 //         JOIN recipes r 
 //         ON mr.recipe_id = r.id
