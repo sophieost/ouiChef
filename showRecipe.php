@@ -6,7 +6,7 @@ require_once "inc/functions.inc.php";
 
 if (!empty($_GET)) {
 
-    $id = intval($_GET['id']); // Convertit l'ID en entier
+    $id = $_GET['id'];
 
     $recipes = showRecipe($id);
 
@@ -78,7 +78,7 @@ require_once "inc/header.inc.php";
 
             <li>
                 <span>Ajouter aux favoris</span>
-                <a href="<?=RACINE_SITE?>recette.php?action=add&id=<?= $recipes['id'] ?>" class="linkFav"><i class="bi bi-heart fs-4 iconFav text-dark"></i></a>
+                <a href="<?= RACINE_SITE ?>recette.php?action=add&id=<?= $recipes['id'] ?>" class="linkFav"><i class="bi bi-heart fs-4 iconFav text-dark"></i></a>
             </li>
         </ul>
 
@@ -86,7 +86,7 @@ require_once "inc/header.inc.php";
 
     <div class="row">
         <div class="col-md-6 col-sm-12 h-100 mb-3">
-            <img src="<?= RACINE_SITE . "assets/img/" . $recipes['image'] ?>" class="card-img h-50" alt="image de . <?= $recipes['name'] ?>">
+            <img src="<?= RACINE_SITE . "assets/img/" . $recipes['image'] ?>" class="card-img" alt="image de . <?= $recipes['name'] ?>">
         </div>
 
         <div class="ingredients col-md-6 col-sm-12">
@@ -101,14 +101,15 @@ require_once "inc/header.inc.php";
 
                     foreach ($ingredients as $ingredient) {
                     ?>
-                        <div class="d-flex my-3 justify-content-between mx-5">
-                            <div class="">
-                                <input class="form-control border-0" type="text" id="ingedient" name="ingredient" value="<?= $ingredient['ingredient'] ?>" readonly>
+                        <div class="d-flex my-3 justify-content-between">
+                            <div>
+                                <input class="form-check-input" type="checkbox" id="ingedient" name="ingredient" value="<?= $ingredient['ingredient'] ?>">
+                                <label class="form-check-label" for="ingredient">
+                                    <?= $ingredient['ingredient'] ?>
+                                </label>
                             </div>
 
-                            <div class="img-ingredients">
-                                <img class="" src="<?= RACINE_SITE . "assets/img/ingredients/" . $ingredient['image'] ?>" alt="image de" .<?= $ingredient['ingredient'] ?>>
-                            </div>
+
                         </div>
 
                     <?php
@@ -127,7 +128,7 @@ require_once "inc/header.inc.php";
         <?php
         foreach ($instructions as $instruction) {
         ?>
-            <p><?= $instruction?></p>
+            <p><?= $instruction ?></p>
 
         <?php
         }
@@ -143,7 +144,7 @@ require_once "inc/header.inc.php";
 
 
 <?php
-require_once "inc/footer.inc.php";
+// require_once "inc/footer.inc.php";
 
 
 ?>

@@ -70,3 +70,7 @@ linkFav.addEventListener('click', () => {
 
     iconFav.style.color = 'red';
 })
+
+
+
+

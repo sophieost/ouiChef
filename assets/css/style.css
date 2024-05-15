@@ -642,16 +642,17 @@ nav {
 }
 
 #showRecipe {
-    margin-top: 150px;
-    min-height: 100vh;
+    margin-top: 50px;
+    min-height: 50vh;
 
     .iconFav:hover {
         color: var(--orange) !important;
     }
 
-    .img-ingredients {
-        width: 50px;
-    }
+}
+
+#menus{
+    margin-top: 150px;
 }
 
 
