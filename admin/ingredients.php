@@ -30,9 +30,7 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
 }
 
 
-
 $info = '';
-
 
 if (!empty($_POST)) {
     // debug($_POST);
@@ -105,7 +103,10 @@ require_once "../inc/header.inc.php"
 
 </div>
 
-<div class="alert alert-danger w-50 mx-auto text-center"><?=$message?></div>
+<?php if (!empty($message)) { ?>
+    <div class="alert alert-danger w-50 mx-auto text-center"><?= $message ?></div>
+<?php } ?>
+
 
 <div class="row container mx-auto mb-5">
     <?php
@@ -151,8 +152,6 @@ require_once "../inc/header.inc.php"
     // debug($_POST);
     ?>
 </div>
-
-
 
 
 

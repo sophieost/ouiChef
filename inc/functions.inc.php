@@ -516,7 +516,7 @@ function allCategories(): array
 
 //   AJOUTER UNE CATEGORIE
 
-function addCategory(string $categoryName): void
+function addCategory(string $name): void
 {
 
     $pdo = connexionBdd();
@@ -526,7 +526,7 @@ function addCategory(string $categoryName): void
     $request = $pdo->prepare($sql);
     $request->execute(array(
 
-        ':name' => $categoryName,
+        ':name' => $name,
     ));
 }
 
@@ -534,16 +534,15 @@ function addCategory(string $categoryName): void
 //   MODIFIER UNE CATEGORIE
 
 
-function updateCategory(int $id, string $name, string $image): void
+function updateCategory(int $id, string $name): void
 {
     $pdo = connexionBdd();
-    $sql = "UPDATE recipes SET name = :name, image = :image WHERE id = :id";
+    $sql = "UPDATE recipes SET name = :name WHERE id = :id";
 
     $request = $pdo->prepare($sql);
     $request->execute(array(
         ':id' => $id,
-        ':name' => $name,
-        ':image' => $image
+        ':name' => $name
     ));
 }
 

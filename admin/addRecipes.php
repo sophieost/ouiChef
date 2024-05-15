@@ -27,11 +27,11 @@ if (!empty($_POST)) {
 
 
 
-        // if (!isset($_POST['name']) || (strlen($_POST['name']) < 3 && trim($_POST['name'])) || !preg_match('/^[a-zA-Z0-9 ]*$/', $_POST['name'])) {
+        if (!isset($_POST['name']) || (strlen($_POST['name']) < 3 && trim($_POST['name']))) {
 
 
-        //     $info .= alert("Le nom n'est pas valide", "danger");
-        // }
+            $info .= alert("Le nom n'est pas valide", "danger");
+        }
 
 
         // if (!isset($_POST['slug']) || (strlen($_POST['slug']) < 3 && trim($_POST['slug'])) || !preg_match('/^[a-zA-Z0-9-]+$/', $_POST['slug'])) {
