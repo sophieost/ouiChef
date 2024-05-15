@@ -10,7 +10,8 @@ if (!isset($_SESSION['user'])) {
     exit();
 }
 
-
+$nb_jours = 0; // Initialisation de la variable avec une valeur par défaut
+$nb_pers = 0;
 
 if (!empty($_GET['action']) && $_GET['action'] == 'add' && !empty($_GET['id_menu'])) {
 
@@ -51,7 +52,7 @@ if (!empty($_GET['action']) && $_GET['action'] == 'add' && !empty($_GET['id_menu
 
 
 
-$title = "Recettes";
+$title = "Menus";
 require_once "inc/header.inc.php";
 ?>
 <main>
