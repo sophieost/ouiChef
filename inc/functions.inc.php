@@ -106,13 +106,8 @@ function connexionBdd()
 // connexionBdd();
 
 
-//  DECONNEXION DATABASE 
 
-
-// function deconnexionBdd($pdo)
-// {
-//     $pdo = null;
-// }
+// ***********************************  CONNEXION / INSCRIPTION  ********************************************
 
 
 //  INSCRIPTION USERS
@@ -171,7 +166,7 @@ function checkUser(string $emailSaisi): mixed
     return $resultat;
 }
 
-// ***********************************************************************************
+// *************************************  UTILISATEURS ADMIN  *****************************************************
 
 
 //   RECUPERATION DE TOUS LES UTILISATEURS
@@ -233,6 +228,8 @@ function updateRole(string $role, int $id): void
 
 
 
+// *************************************  PROFIL UTILISATEUR  ************************************************** 
+
 //  UTILISATEUR PEUT MODIFIER SES INFOS
 
 
@@ -253,7 +250,7 @@ function updateUser(int $id, string $pseudo, string $email, string $mdp): void
 
 
 
-// ***********************************************************************************
+// **************************************  RECETTES ADMIN ************************************************
 
 //   RECUPERER TOUTES LES RECETTES
 
@@ -498,7 +495,7 @@ function showCategoriesRecipe(int $id): mixed
 }
 
 
-// **********************************************************************************
+// *************************************  CATEGORIES ADMIN  ****************************************************
 
 
 //   RECUPERER TOUTES LES CATEGORIES 
@@ -573,7 +570,7 @@ function showCategory(int $id): mixed
 }
 
 
-// **********************************************************************************
+// ****************************************  INGREDIENTS ADMIN  *************************************************
 
 
 //   RECUPERER TOUS LES INGREDIENTS
@@ -650,7 +647,7 @@ function showIngredient(int $id): mixed
 }
 
 
-// *********************************************************************
+// *****************************************  PAGE RECETTES  ************************************
 
 //   FONCTION POUR RECUPERER LES RECETTES PAR PRIX
 
@@ -726,7 +723,7 @@ function recipesByPlat(string $typePlat): array
 
 
 
-// ********************************************************
+// ***************************************  FAVORIS  ***********************************************
 
 
 
@@ -801,7 +798,7 @@ function allBlacklistRecipes(int $userId): array
 
 
 
-// *********************************************************************
+// ******************************************  PAGE MENUS  *************************************************
 
 
 //   POUR AJOUTER UN MENU A LA TABLE MENUS
@@ -821,9 +818,7 @@ function addMenu(int $user_id, int $jours, int $pers)
 
 
 
-
 //    RECUPERER LES RECETTES DU FORMULAIRE 
-
 
 
 function getRecipesByType($mealType, $season, $price, $time, $categories, $nb_jours): array
@@ -900,10 +895,6 @@ function getRecipesByType($mealType, $season, $price, $time, $categories, $nb_jo
 
 
 
-
-
-
-
 //   INSERER LES RECETTES DANS LA TABLE MENUS_RECETTES
 
 
@@ -940,6 +931,7 @@ function insertRecipesToMenu($menu_id, $entrees_ids, $plats_ids, $desserts_ids)
 }
 
 
+// RECUPERE LE NOMBRE DE JOURS ET NOMBRE DE PERSONNES DU MENU CREE
 
 function getMenuInfoById($menu_id)
 {
@@ -954,7 +946,7 @@ function getMenuInfoById($menu_id)
 }
 
 
-
+//  RECUPERE LES NOMS DES RECETTES DU MENU CREE
 
 function getRecipeNamesForMenu($menu_id)
 {
@@ -973,34 +965,24 @@ function getRecipeNamesForMenu($menu_id)
 }
 
 
-//   POUR AFFICHER LES MENUS D'UN UTILISATEUR
+//   RECUPERE LE DERNIER MENU DE L'UTILISATEUR CONNECTE
+
+function getLastMenuIdByUserId($user_id) {
+    $pdo = connexionBdd();
+
+    // Sélectionnez l'ID du dernier menu pour cet utilisateur
+    $sql = "SELECT id FROM menus WHERE user_id = :user_id ORDER BY id DESC LIMIT 1";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    $stmt->execute();
+
+    // Récupérez le résultat
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // Retournez l'ID du menu ou null si aucun menu n'a été trouvé
+    return $result ? $result['id'] : null;
+}
 
 
-// function showMenu(int $menu_id): mixed
-// {
-//     $pdo = connexionBdd(); // Assurez-vous d'avoir une fonction pour la connexion à la BDD
 
-//     // Récupérez les détails du menu
-//     $sqlMenu = "SELECT nb_jours, nb_pers 
-//     FROM menus 
-//     WHERE id = :menu_id";
-//     $stmtMenu = $pdo->prepare($sqlMenu);
-//     $stmtMenu->execute([':menu_id' => $menu_id]);
-//     $menuDetails = $stmtMenu->fetch();
 
-//     // Vérifiez si le menu existe
-//     if ($menuDetails) {
-
-//         // Récupérez les recettes associées au menu
-//         $sqlRecipes = "SELECT r.name, r.typePlat 
-//         FROM menu_recettes mr
-//         JOIN recipes r 
-//         ON mr.recipe_id = r.id
-//         WHERE mr.menu_id = :menu_id";
-//         $stmtRecipes = $pdo->prepare($sqlRecipes);
-//         $stmtRecipes->execute([':menu_id' => $menu_id]);
-//         $recipes = $stmtRecipes->fetchAll();
-
-//         return $recipes;
-//     }
-// }

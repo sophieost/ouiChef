@@ -39,11 +39,11 @@ if (!empty($_GET['action']) && $_GET['action'] == 'add' && !empty($_GET['id_menu
     });
 
 
-    // debug($desserts);
+    
 }
-// }
 
-// debug($_POST);
+
+
 
 
 

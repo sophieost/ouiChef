@@ -1,6 +1,15 @@
 <?php
 
+// error_reporting(E_ALL);
+// ini_set('display_errors', 1);
+
 require_once "inc/functions.inc.php";
+
+
+if (!isset($_SESSION['user'])) {
+    header("Location: identification.php");
+    exit();
+}
 
 $info = '';
 
@@ -14,39 +23,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $season = isset($_POST['season']) ? $_POST['season'] : null;
     $categories = isset($_POST['categories']) ? $_POST['categories'] : [];
 
-
-
     $menu_id = addMenu($_SESSION['user']['id'], $nb_jours, $nb_pers);
-
-    // $id = $menu_id['id'];
-
 
     $entrees = getRecipesByType('entree', $season, $price, $time, $categories, $nb_jours);
     $plats = getRecipesByType('plat', $season, $price, $time, $categories, $nb_jours);
     $desserts = getRecipesByType('dessert', $season, $price, $time, $categories, $nb_jours);
 
-
     $entrees_ids = array_column($entrees, 'id');
     $plats_ids = array_column($plats, 'id');
     $desserts_ids = array_column($desserts, 'id');
 
-
     if (empty($entrees) && empty($plats) && empty($desserts)) {
         echo "Il n'existe aucune recette avec les critères sélectionnés.";
     } else {
-
         insertRecipesToMenu($menu_id, $entrees_ids, $plats_ids, $desserts_ids);
-
         header("Location: " . RACINE_SITE . "menus.php?action=add&id_menu=" . $menu_id);
         exit();
     }
-
-    // debug($recipes);
-
 }
-
-
-
 
 $title = "Accueil";
 require_once "inc/header.inc.php";
@@ -59,9 +53,7 @@ require_once "inc/header.inc.php";
         <div class="card container p-3">
             <h1 class="text-center fs-1 my-2">MON MENU</h1>
 
-            <form action="" method="post">
-
-
+            <form action="" method="post" id="monFormulaire">
 
                 <div class="row">
 
@@ -82,16 +74,10 @@ require_once "inc/header.inc.php";
                     </div>
                 </div>
 
-
-
-
                 <div class="row align-items-center">
                     <div class="col-lg-6 col-md-12 px-3 text-center">
                         <div class="d-flex flex-column mt-3 align-items-center">
-
-                            <label for="" class=" fw-bold"> Temps de préparation
-                            </label>
-
+                            <label for="" class=" fw-bold"> Temps de préparation</label>
                             <div class="d-flex flex-column mt-2">
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="checkbox" name="time" id="rapide" value="rapide">
@@ -106,19 +92,12 @@ require_once "inc/header.inc.php";
                                     <label class="form-check-label" for="long">Long</label>
                                 </div>
                             </div>
-
-
                         </div>
                     </div>
 
-
                     <div class="col-lg-6 col-md-12 px-3 text-center">
-
                         <div class="d-flex flex-column mt-3 align-items-center">
-
-                            <label for="" class=" fw-bold"> Prix
-                            </label>
-
+                            <label for="" class=" fw-bold"> Prix</label>
                             <div class="d-flex flex-column mt-2">
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="checkbox" name="price" id="bonMarche" value="bonMarche">
@@ -133,23 +112,14 @@ require_once "inc/header.inc.php";
                                     <label class="form-check-label" for="cher">Gros budget</label>
                                 </div>
                             </div>
-
-
                         </div>
                     </div>
                 </div>
 
-
-
-
                 <div class="row">
-
                     <div class="col-lg-6 col-md-12 season">
                         <div class="d-flex flex-column mt-3 ms-5 align-items-center">
-
-                            <label for="" class=" fw-bold"> Saison
-                            </label>
-
+                            <label for="" class=" fw-bold"> Saison</label>
                             <div class="d-flex flex-column mt-2">
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="checkbox" name="season" id="ete" value="ete">
@@ -164,28 +134,20 @@ require_once "inc/header.inc.php";
                                     <label class="form-check-label" for="all">Toutes saisons</label>
                                 </div>
                             </div>
-
-
                         </div>
                     </div>
 
                     <div class="col-lg-6 col-md-12">
                         <div class="d-flex justify-content-center">
                             <button class="btn bg-white btnOptions my-5">Plus d'options</button>
-
                         </div>
                     </div>
                 </div>
-
-
-
 
                 <div class="options pt-3">
                     <h2>Mes préférences</h2>
                     <div class="py-3">
                         <?php
-
-
                         $categories = allCategories();
                         foreach ($categories as $category) {
                             $categoryId = $category['id'];
@@ -197,12 +159,12 @@ require_once "inc/header.inc.php";
                     </div>
                 </div>
 
-                <input type="submit" value="C'est parti !">
+                <input type="submit" value="C'est parti !" onclick="verifierUtilisateur()">
+
             </form>
         </div>
 
     </section>
-
 
     <section class="presentation container">
         <h2 class="text-center mb-5">Le concept : un générateur de menu pour trouver l'inspiration.</h2>
@@ -219,20 +181,23 @@ require_once "inc/header.inc.php";
         <p class="mb-5">Ensuite vous pourrez affiner les menus en modifiant un plat qui ne vous plairait pas. Vous pourrez également liker les plats qui vous ont plu ou écarter les plats qui ne vous plaisent pas. Les recettes likées seront conservées dans votre librairie.</p>
     </section>
 
+    <script>
+        function verifierUtilisateur() {
+            // Vérifiez si l'utilisateur est connecté
 
+            if (empty($_SESSION['user']) ? 'false' : 'true') {
+                // Si l'utilisateur est connecté, soumettez le formulaire
+                document.getElementById('monFormulaire').submit();
+            } else {
+                // Si l'utilisateur n'est pas connecté, redirigez-le vers la page d'identification
+                window.location.href = 'identification.php';
+            }
+        }
 
-
-
-
-
+    </script>
 
 </main>
 
 <?php
-debug($_POST);
-debug($entrees);
-debug($plats);
-debug($desserts);
 require_once "inc/footer.inc.php";
-
 ?>
