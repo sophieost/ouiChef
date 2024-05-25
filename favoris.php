@@ -44,7 +44,7 @@ echo $info;
 
             ?>
 
-                    <li class="list-unstyled d-flex justify-content-between mx-5 my-3"><a href="showRecipe.php?id=<?= $favorite['recipe_id'] ?>" class="text-decoration-none text-dark"><?= htmlspecialchars(ucfirst($favorite['name'])) ?></a><a href="favoris.php?action=add&id=<?= $favorite['recipe_id'] ?>"><i class="bi bi-trash3"></i></a></li>
+                    <li class="list-unstyled d-flex justify-content-between mx-5 my-3"><a href="showRecipe.php?id=<?= $favorite['recipe_id'] ?>" class="text-decoration-none text-dark"><?= htmlspecialchars_decode(ucfirst($favorite['name'])) ?></a><a href="favoris.php?action=add&id=<?= $favorite['recipe_id'] ?>"><i class="bi bi-trash3"></i></a></li>
 
             <?php
                 }

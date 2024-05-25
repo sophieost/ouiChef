@@ -106,6 +106,10 @@ function connexionBdd()
 // connexionBdd();
 
 
+function deconnexionBdd()
+{
+    return null;
+}
 
 // ***********************************  CONNEXION / INSCRIPTION  ********************************************
 
@@ -397,7 +401,6 @@ function updateRecipe(int $id, string $name, string $slug, string $image, string
             ));
         }
     }
-
 }
 
 
@@ -460,7 +463,7 @@ function showRecipe(int $recipe_id): mixed
 function showIngredientsRecipe(int $id): mixed
 {
     $pdo = connexionBdd();
-    $sql = "SELECT recipe_ingredients.*, ingredients.name AS ingredient
+    $sql = "SELECT recipe_ingredients.*, ingredients.name AS ingredient, recipe_ingredients.quantity AS quantity, recipe_ingredients.unity AS unity
     FROM recipe_ingredients
     LEFT JOIN ingredients
     ON recipe_ingredients.ingredient_id = ingredients.id
@@ -473,6 +476,7 @@ function showIngredientsRecipe(int $id): mixed
     $result = $request->fetchAll();
     return $result;
 }
+
 
 
 //   POUR RECUPERER LES CATEGORIES D'UNE RECETTE
@@ -588,7 +592,8 @@ function allIngredients(): array
 
 //   AJOUTER UN INGREDIENT
 
-function addIngredient(string $name): string {
+function addIngredient(string $name): string
+{
     $pdo = connexionBdd();
     try {
         $sql = "INSERT INTO ingredients (name) VALUES (:name)";
@@ -841,7 +846,7 @@ function getRecipesByType($mealType, $season, $price, $time, $categories, $nb_jo
         FROM recipes r
         JOIN recipe_category rc ON r.id = rc.recipe_id
         WHERE r.typePlat = :mealType ";
-    
+
     // Ajouter la clause pour la saison si elle est sélectionnée
     if (!empty($season)) {
         $sql .= "AND r.season = :season ";
@@ -856,12 +861,12 @@ function getRecipesByType($mealType, $season, $price, $time, $categories, $nb_jo
     if (!empty($time)) {
         $sql .= "AND r.time = :time ";
     }
-    
+
     // Ajouter la clause IN pour les catégories si elles sont sélectionnées
     if (!empty($in)) {
         $sql .= "AND rc.category_id IN ($in) ";
     }
-    
+
     // Ajouter la clause LIMIT
     $sql .= "ORDER BY RAND() LIMIT :nb_jours";
 
@@ -967,7 +972,8 @@ function getRecipeNamesForMenu($menu_id)
 
 //   RECUPERE LE DERNIER MENU DE L'UTILISATEUR CONNECTE
 
-function getLastMenuIdByUserId($user_id) {
+function getLastMenuIdByUserId($user_id)
+{
     $pdo = connexionBdd();
 
     // Sélectionnez l'ID du dernier menu pour cet utilisateur
@@ -986,3 +992,52 @@ function getLastMenuIdByUserId($user_id) {
 
 
 
+// ***************************************** LISTE DE COURSES **********************************************
+
+//   AJOUTER UN INGREDIENT A LA LISTE DE COURSE
+
+function addIngredientToList($userId, $name, $quantity, $unity)
+{
+    $pdo = connexionBdd();
+
+    $sql = "INSERT INTO list (user_id, name, quantity, unity)
+            VALUES (:user_id, :name, :quantity, :unity)";
+
+    $request = $pdo->prepare($sql);
+
+    $quantity = is_numeric($quantity) ? $quantity : NULL;
+
+    $request->execute(array(
+        ':user_id' => $userId,
+        ':name' => $name,
+        ':quantity' => $quantity ?? null,
+        ':unity' => $unity ?? null
+    ));
+}
+
+//   SUPPRIMER UN INGREDIENT DE LA LISTE 
+
+function deleteIngredientFromList(int $id): void
+{
+
+    $pdo = connexionBdd();
+
+    $sql = "DELETE FROM list WHERE id = :id";
+
+    $request = $pdo->prepare($sql);
+    $request->execute([':id' => $id]);
+}
+
+
+//   MONTRER LA DERNIERE LISTE DE COURSES CREEE
+
+function showList(): array
+{
+    $pdo = connexionBdd();
+
+    $sql = "SELECT * FROM list";
+
+    $request = $pdo->query($sql);
+    $result = $request->fetchAll();
+    return $result;
+}

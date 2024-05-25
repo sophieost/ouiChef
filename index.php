@@ -6,10 +6,10 @@
 require_once "inc/functions.inc.php";
 
 
-if (!isset($_SESSION['user'])) {
-    header("Location: identification.php");
-    exit();
-}
+// if (!isset($_SESSION['user'])) {
+//     header("Location: identification.php");
+//     exit();
+// }
 
 $info = '';
 
@@ -74,21 +74,21 @@ require_once "inc/header.inc.php";
                     </div>
                 </div>
 
-                <div class="row align-items-center">
+                <div class="row align-items-center check">
                     <div class="col-lg-6 col-md-12 px-3 text-center">
                         <div class="d-flex flex-column mt-3 align-items-center">
                             <label for="" class=" fw-bold"> Temps de préparation</label>
                             <div class="d-flex flex-column mt-2">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" name="time" id="rapide" value="rapide">
+                                    <input class="form-check-input" type="radio" name="time" id="rapide" value="rapide">
                                     <label class="form-check-label" for="rapide">Rapide</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" name="time" id="moyen" value="moyen">
+                                    <input class="form-check-input" type="radio" name="time" id="moyen" value="moyen">
                                     <label class="form-check-label" for="moyen">Moyen</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" name="time" id="long" value="long">
+                                    <input class="form-check-input" type="radio" name="time" id="long" value="long">
                                     <label class="form-check-label" for="long">Long</label>
                                 </div>
                             </div>
@@ -100,15 +100,15 @@ require_once "inc/header.inc.php";
                             <label for="" class=" fw-bold"> Prix</label>
                             <div class="d-flex flex-column mt-2">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" name="price" id="bonMarche" value="bonMarche">
+                                    <input class="form-check-input" type="radio" name="price" id="bonMarche" value="bonMarche">
                                     <label class="form-check-label" for="bonMarche">Petit budget</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" name="price" id="raisonnable" value="raisonnable">
+                                    <input class="form-check-input" type="radio" name="price" id="raisonnable" value="raisonnable">
                                     <label class="form-check-label" for="raisonnable">Budget moyen</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" name="price" id="cher" value="cher">
+                                    <input class="form-check-input" type="radio" name="price" id="cher" value="cher">
                                     <label class="form-check-label" for="cher">Gros budget</label>
                                 </div>
                             </div>
@@ -116,21 +116,21 @@ require_once "inc/header.inc.php";
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row check">
                     <div class="col-lg-6 col-md-12 season">
                         <div class="d-flex flex-column mt-3 ms-5 align-items-center">
                             <label for="" class=" fw-bold"> Saison</label>
                             <div class="d-flex flex-column mt-2">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" name="season" id="ete" value="ete">
+                                    <input class="form-check-input" type="radio" name="season" id="ete" value="ete">
                                     <label class="form-check-label" for="ete">Été</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" name="season" id="hiver" value="hiver">
+                                    <input class="form-check-input" type="radio" name="season" id="hiver" value="hiver">
                                     <label class="form-check-label" for="hiver">Hiver</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" name="season" id="all" value="all">
+                                    <input class="form-check-input" type="radio" name="season" id="all" value="all">
                                     <label class="form-check-label" for="all">Toutes saisons</label>
                                 </div>
                             </div>
@@ -158,9 +158,17 @@ require_once "inc/header.inc.php";
                         ?>
                     </div>
                 </div>
-
-                <input type="submit" value="C'est parti !" onclick="verifierUtilisateur()">
-
+                <?php
+                if (empty($_SESSION['user'])) {
+                ?>
+                    <button class="btnRedirection"><a href="<?= RACINE_SITE ?>identification.php">C'est parti !</a></button>
+                <?php
+                } else {
+                ?>
+                    <input type="submit" value="C'est parti !" onclick="verifierUtilisateur()">
+                <?php
+                }
+                ?>
             </form>
         </div>
 
@@ -168,17 +176,16 @@ require_once "inc/header.inc.php";
 
     <section class="presentation container">
         <h2 class="text-center mb-5">Le concept : un générateur de menu pour trouver l'inspiration.</h2>
-        <p>OUI CHEF vous suggère des menus personnalisés en fonction de vos goûts, envies, du temps que vous avez devant vous ou de votre budget.</p>
-        <p>Une liste de course peut être réalisée à partir des ingrédients des recettes que vous avez choisies. Vous pouvez l'imprimer ou la retrouver sur votre espace personnel depuis votre smartphone</p>
+        <p class="mx-5">OUI CHEF vous suggère des menus personnalisés en fonction de vos goûts, envies, du temps que vous avez devant vous ou de votre budget.</p>
+        <p class="mx-5">Une liste de course peut être réalisée à partir des ingrédients des recettes que vous avez choisies. Vous pouvez l'imprimer ou la retrouver sur votre espace personnel depuis votre smartphone</p>
 
         <h2 class="text-center my-5">Comment ça marche ? c'est simple, vous décidez :</h2>
-        <ul>
+        <ul class="mx-5">
             <li>Du nombre de menus.</li>
-            <li>Des plats que vous souhaitez (entrée, plat, dessert).</li>
             <li>Du nombre de personnes.</li>
             <li>De vos préférences.</li>
         </ul>
-        <p class="mb-5">Ensuite vous pourrez affiner les menus en modifiant un plat qui ne vous plairait pas. Vous pourrez également liker les plats qui vous ont plu ou écarter les plats qui ne vous plaisent pas. Les recettes likées seront conservées dans votre librairie.</p>
+        <p class="m-5">Ensuite vous pourrez affiner les menus en modifiant un plat qui ne vous plairait pas. Vous pourrez également liker les plats qui vous ont plu ou écarter les plats qui ne vous plaisent pas. Les recettes likées seront conservées dans votre librairie.</p>
     </section>
 
     <script>
@@ -193,7 +200,6 @@ require_once "inc/header.inc.php";
                 window.location.href = 'identification.php';
             }
         }
-
     </script>
 
 </main>

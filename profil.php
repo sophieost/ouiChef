@@ -45,7 +45,6 @@ $info = '';
         <div class="col-md-5 col-sm-12 onglets">
             <!-- Les onglets du menu -->
             <div class="onglet"><a href="?informations_php">Mes informations</a></div>
-            <div class="onglet"><a href="?menus_php">Mes menus</a></div>
             <div class="onglet"><a href="?favoris_php">Mes favoris</a></div>
             <div class="onglet"><a href="?action=deconnexion">Déconnexion</a></div>
         </div>
@@ -57,9 +56,6 @@ $info = '';
 
                 if (isset($_GET['informations_php'])) {
                     require_once "informations.php";
-
-                } else if (isset($_GET['menus_php'])) {
-                    require_once "menus.php";
 
                 } else if (isset($_GET['favoris_php'])) {
                     require_once "favoris.php";

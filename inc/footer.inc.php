@@ -15,7 +15,7 @@
                     }
                     ?>
 
-                    <li><a class="text-decoration-none" href="">Les recettes</a></li>
+                    <li><a class="text-decoration-none" href="<?= RACINE_SITE ?>recettes.php">Les recettes</a></li>
                     <li><a class="text-decoration-none" href="">Conditions générales d'utilisation</a></li>
                 </ul>
             </div>

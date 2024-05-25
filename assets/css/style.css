@@ -28,11 +28,11 @@ h3 {
     font-weight: bold;
 }
 
-li{
+li {
     list-style: none;
 }
 
-a{
+a {
     text-decoration: none;
     color: black;
 }
@@ -41,6 +41,10 @@ img {
     width: 100%;
     object-fit: cover;
     aspect-ratio: 1/1;
+}
+
+input[type="checkbox"]:checked {
+    color: var(--orange);
 }
 
 /* NAVBAR */
@@ -75,6 +79,13 @@ nav {
         }
     }
 
+    @media screen and (max-width: 994px) {
+        .logo1 {
+            width: 5rem;
+        }
+
+    }
+
 }
 
 
@@ -102,6 +113,7 @@ nav {
         position: relative;
         border-radius: 20px;
         border: none;
+
 
         .days {
             display: flex;
@@ -134,14 +146,17 @@ nav {
                 height: 33px;
                 font-family: 'Open Sans';
             }
-            .minusBtn, .plusBtn{
+
+            .minusBtn,
+            .plusBtn {
                 background-color: transparent;
                 outline: none;
                 border: none;
             }
         }
 
-        .people, .days {
+        .people,
+        .days {
 
             input[type="range"] {
                 -webkit-appearance: none;
@@ -162,6 +177,7 @@ nav {
                 border-radius: 0.5rem;
                 height: 0.5rem;
             }
+
             input[type="range"]::-webkit-slider-thumb {
                 -webkit-appearance: none;
                 appearance: none;
@@ -171,6 +187,7 @@ nav {
                 width: 1rem;
                 border-radius: 100%;
             }
+
             input[type="range"]:focus::-webkit-slider-thumb {
                 border: 1px solid #E7F1EF;
                 outline: 3px solid #E7F1EF;
@@ -183,6 +200,7 @@ nav {
                 border-radius: 0.5rem;
                 height: 0.5rem;
             }
+
             input[type="range"]::-moz-range-thumb {
                 border: none;
                 background-color: var(--orange);
@@ -190,6 +208,7 @@ nav {
                 width: 1rem;
                 border-radius: 100%;
             }
+
             input[type="range"]:focus::-moz-range-thumb {
                 border: 1px solid #E7F1EF;
                 outline: 3px solid #E7F1EF;
@@ -197,42 +216,19 @@ nav {
             }
         }
 
-        .time {
+        .check {
             label:hover {
                 cursor: pointer;
             }
 
-            input[type="checkbox"] {
-                visibility: hidden;
-            }
-
-            input[type="checkbox"]:checked+.label i {
-                color: var(--orange);
-            }
-        }
-
-        .price {
-            label:hover {
-                cursor: pointer;
-            }
-
-            input[type="checkbox"] {
-                visibility: hidden;
-            }
-
-            input[type="checkbox"]:checked+.label i {
-                color: var(--orange);
-            }
-        }
-
-        .repas {
-            input[type="checkbox"]:checked {
+            input[type="radio"]:checked {
                 background-color: var(--orange);
             }
         }
 
+
         .btnOptions {
-            &:hover{
+            &:hover {
                 background-color: rgba(255, 255, 255, 0.562) !important;
                 border: 1px solid var(--black);
             }
@@ -265,7 +261,7 @@ nav {
             display: block;
         }
 
-        input[type="submit"] {
+        input[type="submit"], .btnRedirection {
             background-color: var(--orange);
             color: white;
             border: none;
@@ -277,10 +273,19 @@ nav {
             transform: translateX(-50%);
             margin-bottom: -20px;
 
-            &:hover{
+            &:hover {
                 zoom: 1.2;
             }
 
+        }
+
+    }
+
+    @media screen and (max-width: 994px) {
+
+        .card {
+            max-width: 70%;
+            margin: 10vh 0;
         }
 
     }
@@ -595,11 +600,6 @@ nav {
 
 
 
-
-
-
-
-
 /*   LES RECETTES */
 
 #lesRecettes {
@@ -645,25 +645,152 @@ nav {
             color: var(--orange) !important;
         }
     }
-
-
-
 }
 
+
+#menus {
+
+    background: url(../img/menusBg.jpg) center/cover fixed;
+}
+
+
 #showRecipe {
-    margin-top: 50px;
-    min-height: 50vh;
+    /* border-radius: 50px; */
+    margin-top: 10vh;
 
     .iconFav:hover {
         color: var(--orange) !important;
     }
+    @media screen and (max-width: 650px) {
+        
+        ul{
+            flex-direction: column;
+        }
+
+        .titleResponsive{
+        justify-content: center !important;    
+        }
+
+    }
 
 }
 
-#menus{
-    margin-top: 150px;
+.menuHeader {
+    background-color: var(--yellow);
+    margin-top: 10vh;
+    min-height: 15vh;
+
+    button {
+        background-color: var(--blue);
+    }
 }
 
+#menus {
+
+    .titreMenu {
+        border-radius: 50px;
+        background-color: var(--orange);
+    }
+
+    a:hover {
+        color: var(--orange);
+    }
+}
+
+#containerList {
+
+    background: url(../img/liste.jpg) center/cover;
+    min-height: 100vh;
+    display: flex;
+    margin-top: 12vh;
+    flex-direction: column;
+    align-items: center;
+    border: none;
+    color: var(--black);
+    padding: 2rem 0;
+
+    form {
+        margin: 5rem 0;
+    }
+
+    form input {
+        width: 250px;
+        height: 50px;
+        border-radius: 30px;
+        margin-bottom: 30px;
+        padding: 0 1rem;
+        border: none;
+        outline: none;
+        font-size: 1.3rem;
+        background-color: var(--orange);
+        color: var(--white);
+        box-shadow: inset 0px 1px 6px 1px rgba(69, 69, 69, 0.45);
+        transition: 0.7s;
+    }
+
+    form input::placeholder {
+        color: var(--white);
+        font-size: small;
+        font-style: italic;
+
+    }
+
+    form input:focus {
+        border: 3px solid var(--white);
+    }
+
+    ul li {
+        color: var(--black);
+        list-style: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+    }
+
+    .btnList {
+        width: 250px;
+        height: 50px;
+        background-color: transparent;
+        color: var(--black);
+        border-radius: 30px;
+        box-shadow: 0px 2px 8px 0px #3f3f3f;
+    }
+
+    .btnList:hover {
+        background-color: var(--orange);
+        color: var(--black);
+
+    }
+
+    
+
+}
+@media screen and (max-width: 994px) {
+        #containerList {
+
+            background-image: url(../img/liste.jpg);
+            background-size: 150%;
+            height: 50vh;
+        }
+
+    }
+@media screen and (max-width: 650px) {
+        #containerList {
+
+            background-image: url(../img/liste.jpg);
+            background-size: 180%;
+            height: 30vh;
+        }
+
+    }
+@media screen and (max-width: 490px) {
+        #containerList {
+
+            background-image: url(../img/liste.jpg);
+            background-size: 230%;
+            height: 20vh;
+        }
+
+    }
 
 
 /* FOOTER */

@@ -5,9 +5,10 @@ require_once "functions.inc.php";
 // déconnexion ($_SESSION)
 logOut();
 
+if (isset($_SESSION['user'])){
 $user_id = $_SESSION['user']['id'];
 $menu_id = getLastMenuIdByUserId($user_id);
-
+}
 
 ?>
 
@@ -50,7 +51,7 @@ $menu_id = getLastMenuIdByUserId($user_id);
 
                     <ul class="navbar-nav mb-2 mb-lg-0 ml-auto align-items-end me-5">
                         <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="<?= RACINE_SITE ?>menus.php?action=add&id_menu=<?=$menu_id?>">Mes Menus</a>
+                            <a class="nav-link" aria-current="page" href="<?= RACINE_SITE ?>menus.php">Mes Menus</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= RACINE_SITE ?>liste.php">Ma liste de courses</a>
