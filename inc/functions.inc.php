@@ -253,6 +253,21 @@ function updateUser(int $id, string $pseudo, string $email, string $mdp): void
 }
 
 
+function updateImgUser(int $id, string $image): void
+{
+    $pdo = connexionBdd();
+
+    $sql = "UPDATE users SET image = :image WHERE id = :id";
+
+    $request = $pdo->prepare($sql);
+    $request->execute(array(
+        ':id' => $id,
+        ':image' => $image
+      
+    ));
+}
+
+
 
 // **************************************  RECETTES ADMIN ************************************************
 
