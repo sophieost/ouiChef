@@ -19,14 +19,28 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
 
             addRecipeToFavorites($userId, $recipeId);
 
-            $info = alert("Recette ajoutée aux favoris", "success");
+            $info = alert("Recette ajoutée à la blacklist", "success");
 
-        } else {
-            alert("Vous devez créer un compte pour ajouter une recette à vos favoris", 'danger');
         }
 
     }
     // header("location:" . RACINE_SITE . "recettes.php");
+}
+
+
+if (isset($_GET['action']) && isset($_GET['id'])) {
+    if (!empty($_GET['action']) && $_GET['action'] == 'blacklist' && !empty($_GET['id'])) {
+
+        if (isset($_SESSION['user'])) {
+
+            $userId = $_SESSION['user']['id'];
+            $recipeId = htmlentities($_GET['id']);
+
+            addRecipeToBlacklist($userId, $recipeId);
+
+            $info = alert("Recette ajoutée aux favoris", "success");
+        }
+    }
 }
 
 
@@ -214,8 +228,22 @@ if (isset($_GET)) {
                             <div class="d-flex justify-content-between align-items-center favParent">
                                 <a href="<?= RACINE_SITE . "showRecipe.php?id=" . $recipe['id'] ?>" class="btn border">Voir la recette</a>
 
-                                <a href="recettes.php?action=fav&id=<?= $recipe['id'] ?>" class="linkFav"><i class="bi bi-heart fs-3 
-                                iconFav text-dark"></i></a>
+                                <?php
+                                if (!empty($_SESSION['user'])) {
+                                ?>
+
+                                <div>
+                                    <a href="recettes.php?action=fav&id=<?= $recipe['id'] ?>" class="linkFav"><i class="bi bi-heart fs-3 
+                                iconFav text-dark mx-3"></i></a>
+
+                                <a href="recettes.php?action=blacklist&id=<?= $recipe['id'] ?>" class="linkFav"><i class="bi bi-emoji-frown fs-3 iconFav mx-3"></i></a>
+                                </div>
+
+                                
+
+                                <?php
+                                }
+                                ?>
                             </div>
 
                         </div>

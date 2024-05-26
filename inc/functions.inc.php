@@ -106,11 +106,6 @@ function connexionBdd()
 // connexionBdd();
 
 
-function deconnexionBdd()
-{
-    return null;
-}
-
 // ***********************************  CONNEXION / INSCRIPTION  ********************************************
 
 
@@ -133,6 +128,8 @@ function inscriptionUsers(string $pseudo, string $email, string $mdp): void
             ':mdp' => $mdp,
         )
     );
+
+    $pdo = null;
 }
 
 
@@ -150,6 +147,9 @@ function checkEmailUser(string $email): mixed
     ));
 
     $resultat = $request->fetch();
+
+    $pdo = null;
+
     return $resultat;
 }
 
@@ -167,6 +167,9 @@ function checkUser(string $emailSaisi): mixed
     $request->bindParam(':email', $emailSaisi);
     $request->execute();
     $resultat = $request->fetch();
+
+    $pdo = null;
+
     return $resultat;
 }
 
@@ -182,6 +185,9 @@ function allUsers(): array
     $sql = "SELECT * FROM users";
     $request = $pdo->query($sql);
     $result = $request->fetchAll();
+
+    $pdo = null;
+
     return $result;
 }
 
@@ -198,6 +204,9 @@ function showUser(int $id): array
 
     ));
     $result = $request->fetch();
+
+    $pdo = null;
+
     return $result;
 }
 
@@ -214,6 +223,8 @@ function deleteUser(int $id): void
         ':id' => $id
 
     ));
+
+    $pdo = null;
 }
 
 //   MODIFIER LE ROLE D'UN UTILISATEUR
@@ -228,6 +239,8 @@ function updateRole(string $role, int $id): void
         ':id' => $id
 
     ));
+
+    $pdo = null;
 }
 
 
@@ -250,6 +263,8 @@ function updateUser(int $id, string $pseudo, string $email, string $mdp): void
         ':email' => $email,
         ':mdp' => $mdp,
     ));
+
+    $pdo = null;
 }
 
 
@@ -265,6 +280,8 @@ function updateImgUser(int $id, string $image): void
         ':image' => $image
       
     ));
+
+    $pdo = null;
 }
 
 
@@ -293,6 +310,9 @@ function allRecipes(): array
     GROUP BY r.id";
     $request = $pdo->query($sql);
     $result = $request->fetchAll();
+
+    $pdo = null;
+
     return $result;
 }
 
@@ -350,6 +370,8 @@ function addRecipe(string $name, string $slug, string $image, string $instructio
             ));
         }
     }
+
+    $pdo = null;
 }
 
 
@@ -416,6 +438,8 @@ function updateRecipe(int $id, string $name, string $slug, string $image, string
             ));
         }
     }
+
+    $pdo = null;
 }
 
 
@@ -440,6 +464,8 @@ function deleteRecipe(int $id): bool
     $sql = "DELETE FROM recipes WHERE id = :id";
     $request = $pdo->prepare($sql);
     $result = $request->execute(array(':id' => $id));
+
+    $pdo = null;
 
     return $result;
 }
@@ -467,6 +493,9 @@ function showRecipe(int $recipe_id): mixed
     ));
 
     $result = $request->fetch();
+
+    $pdo = null;
+
     return $result;
 }
 
@@ -489,6 +518,9 @@ function showIngredientsRecipe(int $id): mixed
     ));
 
     $result = $request->fetchAll();
+
+    $pdo = null;
+
     return $result;
 }
 
@@ -510,6 +542,9 @@ function showCategoriesRecipe(int $id): mixed
     ));
 
     $result = $request->fetchAll();
+
+    $pdo = null;
+
     return $result;
 }
 
@@ -526,6 +561,9 @@ function allCategories(): array
     $sql = "SELECT * FROM categories";
     $request = $pdo->query($sql);
     $result = $request->fetchAll();
+
+    $pdo = null;
+
     return $result;
 }
 
@@ -544,6 +582,8 @@ function addCategory(string $name): void
 
         ':name' => $name,
     ));
+
+    $pdo = null;
 }
 
 
@@ -560,6 +600,8 @@ function updateCategory(int $id, string $name): void
         ':id' => $id,
         ':name' => $name
     ));
+
+    $pdo = null;
 }
 
 //   SUPPRIMER UNE CATEGORIE
@@ -571,6 +613,8 @@ function deleteCategory(int $id): void
     $sql = "DELETE FROM categories WHERE id = :id";
     $request = $pdo->prepare($sql);
     $request->execute(array(':id' => $id));
+
+    $pdo = null;
 }
 
 //   AFFICHER UNE CATEGORIE
@@ -585,6 +629,9 @@ function showCategory(int $id): mixed
     ));
 
     $result = $request->fetch();
+
+    $pdo = null;
+
     return $result;
 }
 
@@ -601,6 +648,9 @@ function allIngredients(): array
     $sql = "SELECT * FROM ingredients ORDER BY id DESC";
     $request = $pdo->query($sql);
     $result = $request->fetchAll();
+
+    $pdo = null;
+
     return $result;
 }
 
@@ -622,6 +672,8 @@ function addIngredient(string $name): string
             return "Erreur : " . $e->getMessage();
         }
     }
+
+    $pdo = null;
 }
 
 
@@ -638,6 +690,8 @@ function updateIngredient(int $id, string $name): void
         ':id' => $id,
         ':name' => $name
     ));
+
+    $pdo = null;
 }
 
 //   SUPPRIMER UN INGREDIENT
@@ -649,6 +703,8 @@ function deleteIngredient(int $id): void
     $sql = "DELETE FROM ingredients WHERE id = :id";
     $request = $pdo->prepare($sql);
     $request->execute(array(':id' => $id));
+
+    $pdo = null;
 }
 
 //   AFFICHER UN INGREDIENT
@@ -663,6 +719,9 @@ function showIngredient(int $id): mixed
     ));
 
     $result = $request->fetch();
+
+    $pdo = null;
+
     return $result;
 }
 
@@ -679,6 +738,9 @@ function recipesByPrice(string $price): array
     $request->execute(array(':price' => $price));
 
     $result = $request->fetchAll();
+
+    $pdo = null;
+
     return $result;
 }
 
@@ -692,6 +754,9 @@ function recipesByTime(string $time): array
     $request->execute(array(':time' => $time));
 
     $result = $request->fetchAll();
+
+    $pdo = null;
+
     return $result;
 }
 
@@ -708,6 +773,9 @@ function recipesByCategory(string $categoryName): array
     $request->execute(array(':categoryName' => $categoryName));
 
     $result = $request->fetchAll();
+
+    $pdo = null;
+
     return $result;
 }
 
@@ -722,6 +790,9 @@ function recipesBySeason(string $season): array
     $request->execute(array(':season' => $season));
 
     $result = $request->fetchAll();
+
+    $pdo = null;
+
     return $result;
 }
 
@@ -736,6 +807,9 @@ function recipesByPlat(string $typePlat): array
     $request->execute(array(':typePlat' => $typePlat));
 
     $result = $request->fetchAll();
+
+    $pdo = null;
+
     return $result;
 }
 
@@ -757,11 +831,26 @@ function addRecipeToFavorites(int $userId, int $recipeId): bool
     $request = $pdo->prepare($sql);
     $result = $request->execute(array(':userId' => $userId, ':recipeId' => $recipeId));
 
+    $pdo = null;
+
     return $result;
 }
 
 
 //   FONCTION POUR SUPPRIMER UNE RECETTE FAVORITE
+
+function deleteFavorite(int $id): void
+{
+    $pdo = connexionBdd();
+    $sql = "DELETE FROM users_recipes WHERE recipe_id = :id";
+    $request = $pdo->prepare($sql);
+    $request->execute(array(':id' => $id));
+
+    $pdo = null;
+}
+
+
+
 
 
 //   FONCTION POUR RECUPERER LES RECETTES FAVORITES D'UN UTILISATEUR
@@ -777,11 +866,13 @@ function allFavoriteRecipes(int $userId): array
 
     $favoriteRecipes = $request->fetchAll(PDO::FETCH_ASSOC);
 
+    $pdo = null;
+
     return $favoriteRecipes;
 }
 
 
-
+// ****************************************************************************
 
 //   FONCTION POUR AJOUTER UNE RECETTE A LA BLACKLIST
 
@@ -792,6 +883,8 @@ function addRecipeToBlacklist(int $userId, int $recipeId): bool
             ON DUPLICATE KEY UPDATE aime = 0";
     $request = $pdo->prepare($sql);
     $result = $request->execute(array(':userId' => $userId, ':recipeId' => $recipeId));
+
+    $pdo = null;
 
     return $result;
 }
@@ -810,6 +903,8 @@ function allBlacklistRecipes(int $userId): array
     $request->execute([':userId' => $userId]);
 
     $blacklistRecipes = $request->fetchAll(PDO::FETCH_ASSOC);
+
+    $pdo = null;
 
     return $blacklistRecipes;
 }
@@ -1028,6 +1123,8 @@ function addIngredientToList($userId, $name, $quantity, $unity)
         ':quantity' => $quantity ?? null,
         ':unity' => $unity ?? null
     ));
+
+    $pdo = null;
 }
 
 //   SUPPRIMER UN INGREDIENT DE LA LISTE 
@@ -1041,6 +1138,8 @@ function deleteIngredientFromList(int $id): void
 
     $request = $pdo->prepare($sql);
     $request->execute([':id' => $id]);
+
+    $pdo = null;
 }
 
 
@@ -1054,5 +1153,8 @@ function showList(): array
 
     $request = $pdo->query($sql);
     $result = $request->fetchAll();
+
+    $pdo = null;
+    
     return $result;
 }

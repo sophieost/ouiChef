@@ -22,6 +22,7 @@ $menu_id = getLastMenuIdByUserId($user_id);
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Projet de soutenance : Oui Chef!">
     <meta name="author" content="Sophie Ostermeyer">
+    
     <!-- Bootstrap CSS v5.3.3 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
@@ -51,7 +52,7 @@ $menu_id = getLastMenuIdByUserId($user_id);
 
                     <ul class="navbar-nav mb-2 mb-lg-0 ml-auto align-items-end me-5">
                         <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="<?= RACINE_SITE ?>menus.php">Mes Menus</a>
+                            <a class="nav-link" aria-current="page" href="<?= RACINE_SITE ?>menus.php?action=add&id_menu=<?=$menu_id?>">Mes Menus</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= RACINE_SITE ?>liste.php">Ma liste de courses</a>

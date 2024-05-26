@@ -12,6 +12,7 @@ if (empty($_SESSION['user'])) {
     header("location:" . RACINE_SITE . "admin/dashboard.php");
 }
 
+logOut();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -35,8 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-logOut();
-
+$id = $_SESSION['user']['id'];
+$user = showUser($id);
 
 $title = "Profil";
 require_once "inc/header.inc.php";
@@ -48,7 +49,7 @@ $info = '';
 
     <div class="row py-5 container align-items-center mx-auto">
         <div class="d-flex flex-column col-md-4 col-sm-12">
-        <img src="<?= RACINE_SITE . "assets/img/" . ($user['image'] ?? 'avatar-chef.jpg') ?>" alt="Avatar" class="avatar-img mx-auto">
+        <img src="<?= RACINE_SITE . "assets/img/" . $user['image'] ?>" alt="Avatar de <?=$_SESSION['user']['pseudo']?>" class="avatar-img mx-auto">
 
             <form action="" method="post" enctype="multipart/form-data" class="mx-auto">
                 <label for="avatar">Changer</label>

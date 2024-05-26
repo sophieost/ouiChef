@@ -161,11 +161,11 @@ require_once "inc/header.inc.php";
                 <?php
                 if (empty($_SESSION['user'])) {
                 ?>
-                    <button class="btnRedirection"><a href="<?= RACINE_SITE ?>identification.php">C'est parti !</a></button>
+                    <button class="btnRedirection"><a href="<?= RACINE_SITE ?>identification.php" class=" text-white">C'est parti !</a></button>
                 <?php
                 } else {
                 ?>
-                    <input type="submit" value="C'est parti !" onclick="verifierUtilisateur()">
+                    <input type="submit" value="C'est parti !">
                 <?php
                 }
                 ?>
@@ -188,19 +188,6 @@ require_once "inc/header.inc.php";
         <p class="m-5">Ensuite vous pourrez affiner les menus en modifiant un plat qui ne vous plairait pas. Vous pourrez également liker les plats qui vous ont plu ou écarter les plats qui ne vous plaisent pas. Les recettes likées seront conservées dans votre librairie.</p>
     </section>
 
-    <script>
-        function verifierUtilisateur() {
-            // Vérifiez si l'utilisateur est connecté
-
-            if (empty($_SESSION['user']) ? 'false' : 'true') {
-                // Si l'utilisateur est connecté, soumettez le formulaire
-                document.getElementById('monFormulaire').submit();
-            } else {
-                // Si l'utilisateur n'est pas connecté, redirigez-le vers la page d'identification
-                window.location.href = 'identification.php';
-            }
-        }
-    </script>
 
 </main>
 
