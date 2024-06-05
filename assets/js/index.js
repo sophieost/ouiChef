@@ -35,7 +35,7 @@ const btnOptions = document.querySelector('.btnOptions');
 const options = document.querySelector('.options');
 btnOptions.addEventListener('click', (e) => {
     e.preventDefault();
-    console.log('click');
+    // console.log('click');
     options.classList.toggle('show');
 })
 
@@ -71,8 +71,4 @@ linkFav.addEventListener('click', () => {
     iconFav.style.color = 'red';
 })
 
-
-
-
-//   LISTE DE COURSES
 

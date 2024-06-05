@@ -1,44 +1,41 @@
 <?php
 require_once "inc/functions.inc.php";
 
-$title = "Les recettes";
 
+$metadescription = "Explorez une variété de recettes savoureuses et trouvez la perfection culinaire. Triez par ingrédients, temps de préparation, ou type de plat pour personnaliser votre expérience gastronomique.";
 
+$title = "Découvrez des Recettes Uniques - Votre Bibliothèque Culinaire";
 
 require_once "inc/header.inc.php";
+
+
 
 $info = "";
 
 if (isset($_GET['action']) && isset($_GET['id'])) {
-    if (!empty($_GET['action']) && $_GET['action'] == 'fav' && !empty($_GET['id'])) {
+    if (!empty($_GET['action']) && !empty($_GET['id'])) {
 
         if (isset($_SESSION['user'])) {
 
             $userId = $_SESSION['user']['id'];
+
             $recipeId = htmlentities($_GET['id']);
 
-            addRecipeToFavorites($userId, $recipeId);
+            if ($_GET['action'] == 'fav') {
 
-            $info = alert("Recette ajoutée à la blacklist", "success");
-
-        }
-
-    }
-    // header("location:" . RACINE_SITE . "recettes.php");
-}
+                addRecipeToFavorites($userId, $recipeId);
 
 
-if (isset($_GET['action']) && isset($_GET['id'])) {
-    if (!empty($_GET['action']) && $_GET['action'] == 'blacklist' && !empty($_GET['id'])) {
 
-        if (isset($_SESSION['user'])) {
+                $info = alert("Recette ajoutée aux favoris", "success");
+            } elseif ($_GET['action'] == 'blacklist') {
 
-            $userId = $_SESSION['user']['id'];
-            $recipeId = htmlentities($_GET['id']);
+                addRecipeToBlacklist($userId, $recipeId);
 
-            addRecipeToBlacklist($userId, $recipeId);
 
-            $info = alert("Recette ajoutée aux favoris", "success");
+
+                $info = alert("Recette ajoutée à la blacklist", "success");
+            }
         }
     }
 }
@@ -146,7 +143,7 @@ if (isset($_GET)) {
 
     <section class="container">
 
-        <h5 class="nbreAffiche my-5 mx-5"><?= count($recipes) . " recettes trouvées" ?? "recettes" ?></h5>
+        <h1 class="nbreAffiche my-5 mx-5 fs-3"><?= count($recipes) . " recettes trouvées" ?? "recettes" ?></h1>
 
         <div class="row my-5">
 
@@ -230,16 +227,22 @@ if (isset($_GET)) {
 
                                 <?php
                                 if (!empty($_SESSION['user'])) {
+
+                                    $isFavorite = isRecipeFavorite($_SESSION['user']['id'], $recipe['id']);
+                                    $isBlacklist = isRecipeBlacklist($_SESSION['user']['id'], $recipe['id']);
                                 ?>
 
-                                <div>
-                                    <a href="recettes.php?action=fav&id=<?= $recipe['id'] ?>" class="linkFav"><i class="bi bi-heart fs-3 
-                                iconFav text-dark mx-3"></i></a>
+                                    <div>
+                                        <a href="recettes.php?action=fav&id=<?= $recipe['id'] ?>" class="linkFav">
+                                            <i class="bi <?= $isFavorite ? 'bi-heart-fill' : 'bi-heart' ?> fs-3 iconFav <?= $isFavorite ? 'text-danger' : 'text-dark' ?>"></i>
+                                        </a>
 
-                                <a href="recettes.php?action=blacklist&id=<?= $recipe['id'] ?>" class="linkFav"><i class="bi bi-emoji-frown fs-3 iconFav mx-3"></i></a>
-                                </div>
+                                        <a href="recettes.php?action=blacklist&id=<?= $recipe['id'] ?>" class="linkFav">
+                                            <i class="bi <?= $isBlacklist ? 'bi-emoji-frown-fill' : 'bi-emoji-frown' ?> fs-3 iconFav mx-3 <?= $isBlacklist ? 'text-danger' : 'text-dark' ?>"></i>
+                                        </a>
+                                    </div>
 
-                                
+
 
                                 <?php
                                 }

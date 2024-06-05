@@ -112,7 +112,7 @@ if (isset($_POST['pseudo'], $_POST['email'], $_POST['mdp'])) {
             $emailSaisi = isset($_POST['emailConnect']) ? $_POST['emailConnect'] : null;
             $mdp = isset($_POST['mdpConnect']) ? $_POST['mdpConnect'] : null;
 
-            $user = checkUser($emailSaisi, $mdp);
+            $user = checkEmailUser($emailSaisi);
             // debug($user);
 
             if ($user) {
@@ -134,7 +134,9 @@ if (isset($_POST['pseudo'], $_POST['email'], $_POST['mdp'])) {
 
 
 
-$title = "Identification";
+$title = "Connexion et Inscription - OuiChef";
+
+$metadescription = "Connectez-vous ou inscrivez-vous sur OuiChef pour accéder à des fonctionnalités exclusives. Créez un compte et explorez nos recettes, menus personnalisés et bien plus encore.";
 
 require_once "inc/header.inc.php";
 ?>

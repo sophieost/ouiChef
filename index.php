@@ -24,17 +24,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $categories = isset($_POST['categories']) ? $_POST['categories'] : [];
 
     $menu_id = addMenu($_SESSION['user']['id'], $nb_jours, $nb_pers);
-
-    $entrees = getRecipesByType('entree', $season, $price, $time, $categories, $nb_jours);
-    $plats = getRecipesByType('plat', $season, $price, $time, $categories, $nb_jours);
-    $desserts = getRecipesByType('dessert', $season, $price, $time, $categories, $nb_jours);
+    $userId = $_SESSION['user']['id'];
+    $entrees = getRecipesByType('entree', $userId, $season, $price, $time, $categories, $nb_jours);
+    $plats = getRecipesByType('plat', $userId, $season, $price, $time, $categories, $nb_jours);
+    $desserts = getRecipesByType('dessert', $userId, $season, $price, $time, $categories, $nb_jours);
 
     $entrees_ids = array_column($entrees, 'id');
     $plats_ids = array_column($plats, 'id');
     $desserts_ids = array_column($desserts, 'id');
 
     if (empty($entrees) && empty($plats) && empty($desserts)) {
-        echo "Il n'existe aucune recette avec les critères sélectionnés.";
+        $info =  "Il n'existe aucune recette avec les critères sélectionnés.";
     } else {
         insertRecipesToMenu($menu_id, $entrees_ids, $plats_ids, $desserts_ids);
         header("Location: " . RACINE_SITE . "menus.php?action=add&id_menu=" . $menu_id);
@@ -42,7 +42,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-$title = "Accueil";
+
+$metadescription = "Découvrez des menus sur mesure adaptés à vos goûts et besoins nutritionnels. Sélectionnez vos préférences et laissez notre outil intelligent composer pour vous un menu personnalisé et équilibré.";
+
+$title = "Menus Personnalisés - Créez Votre Menu Idéal en Quelques Clics";
+
 require_once "inc/header.inc.php";
 
 ?>

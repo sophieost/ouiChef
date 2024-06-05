@@ -20,7 +20,7 @@ $menu_id = getLastMenuIdByUserId($user_id);
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Projet de soutenance : Oui Chef!">
+    <meta name="description" content=<?= $metadescription ?>>
     <meta name="author" content="Sophie Ostermeyer">
     
     <!-- Bootstrap CSS v5.3.3 -->

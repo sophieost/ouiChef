@@ -36,7 +36,10 @@ if( !isset($_SESSION['user'])){
 }
 
 
-$title = "Backoffice";
+$metadescription = "Consultez et organisez vos recettes préférées et celles bloquées sur OuiChef. Accédez facilement à vos coups de cœur culinaires et gérez votre liste de recettes à éviter.";
+
+$title = 'Vos Favoris et Blacklist - Gérez Vos Recettes sur OuiChef';
+
 require_once "../inc/header.inc.php";
 ?>
 
@@ -59,10 +62,10 @@ require_once "../inc/header.inc.php";
 
         <div class="onglets row container mx-auto">
             <!-- Les onglets du menu -->
-            <div class="onglet col-lg-2 col-md-4 col-sm-12"><a href="?users_php">Utilisateurs</a></div>
-            <div class="onglet col-lg-2 col-md-4 col-sm-12"><a href="?recipes_php">Recettes</a></div>
-            <div class="onglet col-lg-2 col-md-4 col-sm-12"><a href="?categories_php">Catégories</a></div>
-            <div class="onglet col-lg-2 col-md-4 col-sm-12"><a href="?ingredients_php">Ingrédients</a></div>
+            <a href="?users_php" class="onglet col-lg-2 col-md-4 col-sm-12"><div>Utilisateurs</div></a>
+            <a href="?recipes_php" class="onglet col-lg-2 col-md-4 col-sm-12"><div>Recettes</div></a>
+            <a href="?categories_php" class="onglet col-lg-2 col-md-4 col-sm-12"><div>Catégories</div></a>
+            <a href="?ingredients_php" class="onglet col-lg-2 col-md-4 col-sm-12"><div>Ingrédients</div></a>
         </div>
 
         <div id="contenu">

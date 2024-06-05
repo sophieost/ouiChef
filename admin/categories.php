@@ -75,7 +75,10 @@ if (!empty($_POST)) {
 $categories = allCategories();
 
 
-$title = "Catégories";
+$metadescription = "Consultez et organisez vos recettes préférées et celles bloquées sur OuiChef. Accédez facilement à vos coups de cœur culinaires et gérez votre liste de recettes à éviter.";
+
+$title = 'Vos Favoris et Blacklist - Gérez Vos Recettes sur OuiChef';
+
 require_once "../inc/header.inc.php"
 
 

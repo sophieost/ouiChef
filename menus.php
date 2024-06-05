@@ -39,12 +39,17 @@ if (!empty($_GET['action']) && $_GET['action'] == 'add' && !empty($_GET['id_menu
     });
 }
 
+if (empty($entrees) && empty($plats) && empty($desserts)) {
+    $info =  "Il n'existe aucune recette avec les critères sélectionnés.";
+}
 
 
 
+$title =  "Menus Sur Mesure - Découvrez Votre Plan Alimentaire Personnalisé";
+
+$metadescription = "Créez un menu adapté à vos goûts et besoins nutritionnels. Sélectionnez vos critères et laissez OuiChef composer pour vous des menus quotidiens personnalisés et équilibrés.";
 
 
-$title = "Menus";
 require_once "inc/header.inc.php";
 ?>
 <main id="menus">
@@ -118,78 +123,73 @@ require_once "inc/header.inc.php";
 
 
 <script>
+
+    
     //   APPARITION DES RECETTES SUR LA PAGE MENUS  //
 
+
     document.addEventListener('DOMContentLoaded', function() {
-        let recipeLinks = document.querySelectorAll('.recipe-link');
+    let recipeLinks = document.querySelectorAll('.recipe-link');
 
-        recipeLinks.forEach(function(link) {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                let recipeId = this.getAttribute('data-id');
-                let menuId = this.getAttribute('data-menu-id');
+    recipeLinks.forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            let recipeId = this.getAttribute('data-id');
+            let menuId = this.getAttribute('data-menu-id');
 
-                let xhr = new XMLHttpRequest();
-                xhr.open('GET', 'showRecipe.php?id=' + recipeId + '&menu_id=' + menuId, true);
-                xhr.onload = function() {
-                    if (xhr.readyState == 4 && xhr.status == 200) {
-                        let recipeContent = document.getElementById('recipe-content');
-                        recipeContent.innerHTML = xhr.responseText;
+            fetch('showRecipe.php?id=' + recipeId + '&menu_id=' + menuId)
+                .then(response => response.text())
+                .then(data => {
+                    let recipeContent = document.getElementById('recipe-content');
+                    recipeContent.innerHTML = data;
 
-                        // Utilisez une valeur en vh pour la hauteur de la navbar
-                        let navbarHeightVh = 10;
+                    let navbarHeightVh = 10;
 
-                        // Convertissez vh en pixels
-                        let navbarHeightPx = window.innerHeight * (navbarHeightVh / 100);
+                    let navbarHeightPx = window.innerHeight * (navbarHeightVh / 100);
 
-                        // Défilement manuel en tenant compte de la hauteur de la navbar en vh
-                        let position = recipeContent.getBoundingClientRect().top + window.pageYOffset - navbarHeightPx;
-                        window.scrollTo({
-                            top: position,
-                            behavior: 'smooth'
-                        });
-                    }
-                };
-                xhr.send();
-            });
+                    let position = recipeContent.getBoundingClientRect().top + window.pageYOffset - navbarHeightPx;
+                    window.scrollTo({
+                        top: position,
+                        behavior: 'smooth'
+                    });
+                })
+                .catch(error => console.error('Error:', error));
         });
+    });
+
+    document.body.addEventListener('submit', function(e) {
+        if (e.target.matches('.ingredientsRecipe')) {
+            e.preventDefault();
+
+            // Créer un objet FormData à partir du formulaire
+            let formData = new FormData(e.target);
+
+            // Créer une requête fetch pour envoyer les données du formulaire
+            fetch('showRecipe.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.text();
+            })
+            .then(data => {
+
+                let messageSuccess = document.getElementById('message-success');
+                messageSuccess.style.display = 'block';
+
+                setTimeout(function() {
+                    messageSuccess.style.display = 'none';
+                }, 5000);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    });
+});
 
 
-
-        document.body.addEventListener('submit', function(e) {
-            if (e.target.matches('.ingredientsRecipe')) {
-                e.preventDefault();
-
-                // Créer un objet FormData à partir du formulaire
-                let formData = new FormData(e.target);
-
-                // Créer une requête AJAX pour envoyer les données du formulaire
-                let xhr = new XMLHttpRequest();
-                xhr.open('POST', 'showRecipe.php', true); // Remplacez par le chemin de votre script PHP
-
-                // Définir ce qui se passe lors de la soumission des données du formulaire
-                xhr.onload = function() {
-                    if (xhr.readyState == 4 && xhr.status == 200) {
-                        // Affichez le message de succès
-                        let messageSuccess = document.getElementById('message-success');
-                        messageSuccess.style.display = 'block'; // Rendre le message visible
-
-                        // Optionnel : masquez le message après quelques secondes
-                        setTimeout(function() {
-                            messageSuccess.style.display = 'none';
-                        }, 5000); // Le message disparaîtra après 5 secondes
-                    } else {
-                        // Gérer les erreurs éventuelles ici
-                        console.error(xhr.statusText);
-                    }
-                };
-
-                // Envoyer les données du formulaire
-                xhr.send(formData);
-            }
-        });
-
-    })
 </script>
 
 <?php

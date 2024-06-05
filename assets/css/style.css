@@ -54,6 +54,7 @@ nav {
     background-color: var(--orange);
     font-family: "Poppins", sans-serif;
     font-size: large;
+    box-shadow: 0px 0px 15px -1px rgba(0,0,0,0.27);
 
     a {
         color: white !important;
@@ -69,6 +70,7 @@ nav {
         width: 7rem;
         margin-top: 2%;
     }
+
 
     .show {
         background: var(--white);
@@ -113,6 +115,7 @@ nav {
         position: relative;
         border-radius: 20px;
         border: none;
+        box-shadow: 0px 0px 15px -1px rgba(0,0,0,0.27);
 
 
         .days {
@@ -228,6 +231,7 @@ nav {
 
 
         .btnOptions {
+            box-shadow: 0px 0px 15px -1px rgba(0,0,0,0.15);
             &:hover {
                 background-color: rgba(255, 255, 255, 0.562) !important;
                 border: 1px solid var(--black);
@@ -249,6 +253,7 @@ nav {
                 transition: 0.5s;
                 background-color: #E7F1EF;
                 cursor: pointer;
+                box-shadow: 0px 0px 15px -1px rgba(0,0,0,0.15);
             }
 
             input[type=checkbox]:checked+.label {
@@ -272,6 +277,7 @@ nav {
             left: 50%;
             transform: translateX(-50%);
             margin-bottom: -20px;
+            box-shadow: 0px 0px 15px -1px rgba(0,0,0,0.27);
 
             &:hover {
                 zoom: 1.2;
@@ -661,6 +667,8 @@ nav {
     .iconFav:hover {
         color: var(--orange) !important;
     }
+
+
     @media screen and (max-width: 650px) {
         
         ul{

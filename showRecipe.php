@@ -3,7 +3,6 @@
 require_once "inc/functions.inc.php";
 
 
-
 if (!empty($_GET)) {
 
     $id = $_GET['id'];
@@ -13,6 +12,7 @@ if (!empty($_GET)) {
     if ($_GET['id'] != $recipes['id']) {
 
         header("location:" . RACINE_SITE . "index.php");
+
     } else {
 
         $instructions = stringToArray($recipes['instructions']);
@@ -24,42 +24,37 @@ $menu_id = isset($_GET['id_menu']) ? $_GET['id_menu'] : null;
 
 if (isset($_GET['action']) && isset($_GET['id'])) {
     if (!empty($_GET['action']) && $_GET['action'] == 'fav' && !empty($_GET['id'])) {
-
-
-
         $userId = $_SESSION['user']['id'];
+        $recipeId = $_GET['id'];
 
-        addRecipeToFavorites($userId, $id);
-
-        $info = alert("Recette ajoutée aux favoris", "success");
+        addRecipeToFavorites($userId, $recipeId);
     }
 }
 
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['ingredients'])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ingredients'])) {
 
-        $userId = $_SESSION['user']['id'];
+    $userId = $_SESSION['user']['id'];
 
-        $ingredients = $_POST['ingredients'];
+    $ingredients = $_POST['ingredients'];
 
-        foreach ($ingredients as $ingredient) {
+    foreach ($ingredients as $ingredient) {
 
-            if (isset($ingredient['checked']) && $ingredient['checked'] == 1) {
-                $name = $ingredient['name'];
-                $quantity = $ingredient['quantity'] ?? '';
-                $unity = $ingredient['unity'] ?? '';
+        if (isset($ingredient['checked']) && $ingredient['checked'] == 1) {
+            $name = $ingredient['name'];
+            $quantity = $ingredient['quantity'] ?? '';
+            $unity = $ingredient['unity'] ?? '';
 
-                addIngredientToList($userId, $name, $quantity, $unity);
-            }
+            addIngredientToList($userId, $name, $quantity, $unity);
         }
     }
 }
 
 
+$title = "Recette Détaillée - Savourez Chaque Étape de Votre Plat Préféré";
 
+$metadescription = "Plongez dans les détails de nos recettes exclusives. Suivez des instructions étape par étape pour créer des plats délicieux qui impressionneront à coup sûr vos invités et raviront vos papilles.";
 
-$title = "Recette";
 require_once "inc/header.inc.php";
 
 
@@ -69,7 +64,7 @@ $info = '';
 
 
 <section id="showRecipe" class="bg-white p-5 border border-3 rounded-5 mt-5">
-<?php echo $info; ?>
+    <?php echo $info; ?>
 
     <div class="d-flex justify-content-between align-items-center py-3">
         <h1><?= $recipes['name'] ?></h1>
@@ -115,8 +110,15 @@ $info = '';
             <?php endif; ?>
 
             <li>
+
+                <?php
+                $userId = $_SESSION['user']['id'];
+                $isFavorite = isRecipeFavorite($userId, $id);
+                ?>
+
                 <span>Ajouter aux favoris</span>
-                <a href="<?= RACINE_SITE ?>showRecipe.php?action=fav&id=<?= $recipes['id'] ?>" class="linkFav"><i class="bi bi-heart fs-4 iconFav text-dark"></i></a>
+                <a href="<?= RACINE_SITE ?>showRecipe.php?action=fav&id=<?= $recipes['id'] ?>" class="linkFav"><i class="bi <?= $isFavorite ? 'bi-heart-fill' : 'bi-heart' ?> fs-4 iconFav <?= $isFavorite ? 'text-danger' : 'text-dark' ?>"></i>
+                </a>
             </li>
         </ul>
 
@@ -179,7 +181,7 @@ $info = '';
                                         echo '';
                                     } else {
                                     ?>
-                                    
+
                                         <input class="form-control p-0 border-0 ingredient-checkbox" type="text" id="unity" name="ingredients[<?= $index ?>][unity]" value="<?= $ingredient['unity'] ?>">
                                     <?php
                                     } ?>

@@ -1,7 +1,6 @@
 <?php
 require_once "inc/functions.inc.php";
 
-$title = "Ma liste de courses";
 
 // if ($_SERVER["REQUEST_METHOD"] == "POST") {
 //     $filteredIngredients = array_filter($_POST['ingredients'], function ($ingredient) {
@@ -38,6 +37,9 @@ if (isset($_GET['id'])) {
     deleteIngredientFromList($ingredientId);
 }
 
+$metadescription = "Gérez votre liste de courses en toute simplicité sur OuiChef. Ajoutez des ingrédients depuis nos recettes, insérez manuellement vos besoins et cochez les articles au fur et à mesure de vos achats.";
+
+$title = "Liste de Courses Interactive - Organisez Vos Achats avec Facilité";
 
 require_once "inc/header.inc.php";
 ?>
@@ -61,7 +63,7 @@ require_once "inc/header.inc.php";
         foreach ($ingredientsList as $ingredientList) {
         ?>
             <div class="d-flex align-items-center">
-                <i class="bi bi-square me-3 p-2 fs-2 checklist-item"></i>
+                <i class="bi bi-square me-5 p-2 fs-2 checklist-item"></i>
                 <li><?= htmlspecialchars($ingredientList['quantity'] ?? '') . ' ' . htmlspecialchars($ingredientList['unity'] ?? '') . ' ' . htmlspecialchars($ingredientList['name'] ?? '') ?></li>
                 <a href="liste.php?id=<?= $ingredientList['id'] ?>"><i class="bi bi-x-lg ms-3 p-2 fs-3"></i></a>
             </div>
@@ -74,7 +76,6 @@ require_once "inc/header.inc.php";
 
 
 <script>
-
     document.addEventListener('DOMContentLoaded', function() {
         let checklistItems = document.querySelectorAll('.checklist-item');
         checklistItems.forEach(function(checkListItem) {

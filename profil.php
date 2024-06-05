@@ -39,8 +39,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $id = $_SESSION['user']['id'];
 $user = showUser($id);
 
-$title = "Profil";
+
+$title = "Mon Profil - Gérez Vos Informations et Vos Recettes sur OuiChef";
+
+$metadescription = "Accédez à votre espace personnel sur OuiChef pour mettre à jour vos informations, consulter vos recettes favorites et gérer votre liste de recettes bloquées. Personnalisez votre expérience culinaire dès maintenant.";
+
 require_once "inc/header.inc.php";
+
 $info = '';
 
 ?>
@@ -68,9 +73,9 @@ $info = '';
 
         <div class="col-md-5 col-sm-12 onglets">
             <!-- Les onglets du menu -->
-            <div class="onglet"><a href="?informations_php">Mes informations</a></div>
-            <div class="onglet"><a href="?favoris_php">Mes favoris</a></div>
-            <div class="onglet"><a href="?action=deconnexion">Déconnexion</a></div>
+            <a href="?informations_php"><div class="onglet">Mes informations</div></a>
+            <a href="?favoris_php"><div class="onglet">Mes favoris</div></a>
+            <a href="?action=deconnexion"><div class="onglet">Déconnexion</div></a>
         </div>
 
         <div id="contenu" class="col-md-7 col-sm-12">

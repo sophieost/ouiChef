@@ -20,8 +20,10 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
 }
 
 
+$metadescription = "Consultez et organisez vos recettes préférées et celles bloquées sur OuiChef. Accédez facilement à vos coups de cœur culinaires et gérez votre liste de recettes à éviter.";
 
-$title = "Recettes";
+$title = 'Vos Favoris et Blacklist - Gérez Vos Recettes sur OuiChef';
+
 require_once "../inc/header.inc.php";
 
 ?>
@@ -34,7 +36,7 @@ require_once "../inc/header.inc.php";
     <a href="addRecipes.php" class="btn btn-sm p-3 fs-5 align-self-center btnAdd"> Ajouter une recette</a>
 
     <h3 class="container mt-5">Entrées</h3>
-    <table class="table table-striped border-dark mb-5 container">
+    <table id="entrees" class="table table-striped border-dark mb-5 container">
         <thead>
             <tr>
                 <!-- th*7 -->
@@ -123,7 +125,7 @@ require_once "../inc/header.inc.php";
 
     
     <h3 class="container">Plats</h3>
-    <table class="table table-striped border-dark mb-5 container">
+    <table id="plats" class="table table-striped border-dark mb-5 container">
         <thead>
             <tr>
                 <!-- th*7 -->
@@ -209,7 +211,7 @@ require_once "../inc/header.inc.php";
 
 
     <h3 class="container">Desserts</h3>
-    <table class="table table-striped border-dark mb-5 container">
+    <table id="desserts" class="table table-striped border-dark mb-5 container">
         <thead>
             <tr>
                 <!-- th*7 -->

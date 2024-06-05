@@ -66,11 +66,10 @@ if (!empty($_POST)) {
 
 
 
+$metadescription = "Prenez le contrôle de vos données sur OuiChef. Mettez à jour vos informations personnelles en toute sécurité et accédez à l'historique de vos activités culinaires pour une expérience personnalisée.";
 
 
-
-
-$title = 'Mes informations';
+$title = 'Gestion de Compte - Mettez à Jour Vos Informations Personnelles sur OuiChef';
 
 require_once "inc/header.inc.php";
 

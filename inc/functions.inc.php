@@ -27,7 +27,13 @@ function debug($var)
 
 
 // ALERT
-
+/**
+ * Afficher les messages d'alerte
+ *
+ * @param string $contenu
+ * @param string $class
+ * @return void
+ */
 function alert(string $contenu, string $class)
 {
 
@@ -153,25 +159,6 @@ function checkEmailUser(string $email): mixed
     return $resultat;
 }
 
-
-
-//   VERIFIER UN UTILISATEUR ( SI L'EMAIL CORRESPOND AU USER)
-
-function checkUser(string $emailSaisi): mixed
-{
-
-    $pdo = connexionBdd();
-
-    $sql = "SELECT * FROM users WHERE email = :email";
-    $request = $pdo->prepare($sql);
-    $request->bindParam(':email', $emailSaisi);
-    $request->execute();
-    $resultat = $request->fetch();
-
-    $pdo = null;
-
-    return $resultat;
-}
 
 // *************************************  UTILISATEURS ADMIN  *****************************************************
 
@@ -837,6 +824,25 @@ function addRecipeToFavorites(int $userId, int $recipeId): bool
 }
 
 
+//   RECUPERER UNE RECETTE FAVORITE
+
+function isRecipeFavorite(int $userId, int $recipeId): bool
+{
+    $pdo = connexionBdd();
+    $sql = "SELECT aime FROM users_recipes WHERE user_id = :userId AND recipe_id = :recipeId";
+    $request = $pdo->prepare($sql);
+    $request->execute(array(':userId' => $userId, ':recipeId' => $recipeId));
+    $result = $request->fetch(PDO::FETCH_ASSOC);
+
+    $pdo = null;
+
+    return $result !== false && $result['aime'] == 1;
+}
+
+
+
+
+
 //   FONCTION POUR SUPPRIMER UNE RECETTE FAVORITE
 
 function deleteFavorite(int $id): void
@@ -848,8 +854,6 @@ function deleteFavorite(int $id): void
 
     $pdo = null;
 }
-
-
 
 
 
@@ -911,6 +915,21 @@ function allBlacklistRecipes(int $userId): array
 
 
 
+//   RECUPERER UNE RECETTE BLACKLISTEE
+
+function isRecipeBlacklist(int $userId, int $recipeId): bool
+{
+    $pdo = connexionBdd();
+    $sql = "SELECT aime FROM users_recipes WHERE user_id = :userId AND recipe_id = :recipeId";
+    $request = $pdo->prepare($sql);
+    $request->execute(array(':userId' => $userId, ':recipeId' => $recipeId));
+    $result = $request->fetch(PDO::FETCH_ASSOC);
+
+    $pdo = null;
+
+    return $result !== false && $result['aime'] == 0;
+}
+
 
 
 // ******************************************  PAGE MENUS  *************************************************
@@ -936,7 +955,7 @@ function addMenu(int $user_id, int $jours, int $pers)
 //    RECUPERER LES RECETTES DU FORMULAIRE 
 
 
-function getRecipesByType($mealType, $season, $price, $time, $categories, $nb_jours): array
+function getRecipesByType($mealType, $userId, $season, $price, $time, $categories, $nb_jours): array
 {
     $pdo = connexionBdd();
 
@@ -952,10 +971,12 @@ function getRecipesByType($mealType, $season, $price, $time, $categories, $nb_jo
 
     // Préparer la requête SQL
     $sql = "
-        SELECT DISTINCT r.id, r.name, r.season, r.price, r.time
-        FROM recipes r
-        JOIN recipe_category rc ON r.id = rc.recipe_id
-        WHERE r.typePlat = :mealType ";
+    SELECT DISTINCT r.id, r.name, r.season, r.price, r.time
+    FROM recipes r
+    JOIN recipe_category rc ON r.id = rc.recipe_id
+    LEFT JOIN users_recipes ur ON r.id = ur.recipe_id AND ur.user_id = :userId
+    WHERE r.typePlat = :mealType
+    AND (ur.aime IS NULL OR ur.aime = 1) ";
 
     // Ajouter la clause pour la saison si elle est sélectionnée
     if (!empty($season)) {
@@ -985,6 +1006,7 @@ function getRecipesByType($mealType, $season, $price, $time, $categories, $nb_jo
 
     // Liaison des paramètres
     $requete->bindParam(':mealType', $mealType);
+    $requete->bindParam(':userId', $userId);
     $requete->bindValue(':nb_jours', (int) $nb_jours, PDO::PARAM_INT);
 
     // Liaison des paramètres pour la saison, le prix et le temps si ils sont sélectionnés
@@ -1155,6 +1177,6 @@ function showList(): array
     $result = $request->fetchAll();
 
     $pdo = null;
-    
+
     return $result;
 }
