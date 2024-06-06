@@ -36,9 +36,9 @@ if( !isset($_SESSION['user'])){
 }
 
 
-$metadescription = "Consultez et organisez vos recettes préférées et celles bloquées sur OuiChef. Accédez facilement à vos coups de cœur culinaires et gérez votre liste de recettes à éviter.";
+$metadescription = "Votre centre de commande culinaire. Surveillez l'activité du site, gérez les recettes et les utilisateurs le tout depuis le tableau de bord de votre backoffice.";
 
-$title = 'Vos Favoris et Blacklist - Gérez Vos Recettes sur OuiChef';
+$title = 'Tableau de Bord - Administration générale';
 
 require_once "../inc/header.inc.php";
 ?>

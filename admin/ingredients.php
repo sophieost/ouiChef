@@ -74,9 +74,9 @@ if (!empty($_POST)) {
 
 $ingredients = allIngredients();
 
-$metadescription = "Consultez et organisez vos recettes préférées et celles bloquées sur OuiChef. Accédez facilement à vos coups de cœur culinaires et gérez votre liste de recettes à éviter.";
+$metadescription = "Optimisez votre base d'ingrédients. Ajoutez, modifiez ou supprimez des ingrédients pour enrichir vos recettes et offrir une expérience culinaire parfaite depuis le backoffice.";
 
-$title = 'Vos Favoris et Blacklist - Gérez Vos Recettes sur OuiChef';
+$title = 'Gestion des Ingrédients - Backoffice Culinaire';
 
 require_once "../inc/header.inc.php"
 

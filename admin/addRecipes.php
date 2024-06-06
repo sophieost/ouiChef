@@ -74,9 +74,9 @@ if (!empty($_POST)) {
 }
 
 
-$metadescription = "Consultez et organisez vos recettes préférées et celles bloquées sur OuiChef. Accédez facilement à vos coups de cœur culinaires et gérez votre liste de recettes à éviter.";
+$metadescription = "Créez et partagez vos recettes gastronomiques. Utilisez notre interface simplifiée pour saisir de nouvelles recettes, enrichir votre menu et inspirer la communauté depuis le backoffice.";
 
-$title = 'Vos Favoris et Blacklist - Gérez Vos Recettes sur OuiChef';
+$title = 'Ajout de Nouvelles Recettes - Backoffice Culinaire';
 
 require_once "../inc/header.inc.php";
 

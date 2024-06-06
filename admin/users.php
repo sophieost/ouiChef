@@ -2,9 +2,9 @@
 
 require_once "../inc/functions.inc.php";
 
-$metadescription = "Consultez et organisez vos recettes préférées et celles bloquées sur OuiChef. Accédez facilement à vos coups de cœur culinaires et gérez votre liste de recettes à éviter.";
+$metadescription = "Accédez à la gestion complète des utilisateurs de votre backoffice. Visualisez, modifiez et gérez efficacement tous les profils utilisateurs en un seul endroit.";
 
-$title = 'Vos Favoris et Blacklist - Gérez Vos Recettes sur OuiChef';
+$title = 'Gestion des Utilisateurs - Backoffice';
 
 require_once "../inc/header.inc.php";
 

@@ -75,9 +75,9 @@ if (!empty($_POST)) {
 $categories = allCategories();
 
 
-$metadescription = "Consultez et organisez vos recettes préférées et celles bloquées sur OuiChef. Accédez facilement à vos coups de cœur culinaires et gérez votre liste de recettes à éviter.";
+$metadescription = "Organisez vos catégories de recettes avec facilité. Ajoutez, éditez ou supprimez des catégories pour structurer votre répertoire culinaire et simplifier la navigation dans le backoffice.";
 
-$title = 'Vos Favoris et Blacklist - Gérez Vos Recettes sur OuiChef';
+$title = 'Gestion des Catégories - Backoffice Culinaire';
 
 require_once "../inc/header.inc.php"
 

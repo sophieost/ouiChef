@@ -20,9 +20,9 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
 }
 
 
-$metadescription = "Consultez et organisez vos recettes préférées et celles bloquées sur OuiChef. Accédez facilement à vos coups de cœur culinaires et gérez votre liste de recettes à éviter.";
+$metadescription = "Découvrez et gérez l'ensemble de votre collection culinaire avec notre liste complète des recettes. Mettez à jour, supprimez ou ajoutez de nouvelles créations directement depuis votre backoffice.";
 
-$title = 'Vos Favoris et Blacklist - Gérez Vos Recettes sur OuiChef';
+$title = 'Liste des Recettes - Gestion Backoffice';
 
 require_once "../inc/header.inc.php";
 
