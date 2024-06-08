@@ -62,10 +62,10 @@ require_once "../inc/header.inc.php";
 
         <div class="onglets row container mx-auto">
             <!-- Les onglets du menu -->
-            <a href="?users_php" class="onglet col-lg-2 col-md-4 col-sm-12"><div>Utilisateurs</div></a>
-            <a href="?recipes_php" class="onglet col-lg-2 col-md-4 col-sm-12"><div>Recettes</div></a>
-            <a href="?categories_php" class="onglet col-lg-2 col-md-4 col-sm-12"><div>Catégories</div></a>
-            <a href="?ingredients_php" class="onglet col-lg-2 col-md-4 col-sm-12"><div>Ingrédients</div></a>
+            <a href="?users_php" class="onglet col-lg-2 col-md-4 col-sm-12 shadow"><div>Utilisateurs</div></a>
+            <a href="?recipes_php" class="onglet col-lg-2 col-md-4 col-sm-12 shadow"><div>Recettes</div></a>
+            <a href="?categories_php" class="onglet col-lg-2 col-md-4 col-sm-12 shadow"><div>Catégories</div></a>
+            <a href="?ingredients_php" class="onglet col-lg-2 col-md-4 col-sm-12 shadow"><div>Ingrédients</div></a>
         </div>
 
         <div id="contenu">

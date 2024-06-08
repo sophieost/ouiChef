@@ -63,10 +63,10 @@ $info = '';
 ?>
 
 
-<section id="showRecipe" class="bg-white p-5 border border-3 rounded-5 mt-5">
+<section id="showRecipe" class=" bg-white p-5 border border-3 rounded-5 mt-5">
     <?php echo $info; ?>
 
-    <div class="d-flex justify-content-between align-items-center py-3">
+    <div class="d-flex justify-content-between align-items-center py-3 container">
         <h1><?= $recipes['name'] ?></h1>
 
         <ul class="list-unstyled mt-3 d-flex justify-content-around infosCard">
@@ -124,7 +124,7 @@ $info = '';
 
     </div>
 
-    <div class="row border-top border-2 py-4">
+    <div class="row border-top border-2 py-4 container mx-auto">
         <div class="col-lg-6 col-md-12 mb-3">
             <img src="<?= RACINE_SITE . "assets/img/" . $recipes['image'] ?>" class="card-img" alt="image de . <?= $recipes['name'] ?>">
         </div>
@@ -160,7 +160,7 @@ $info = '';
                         <div class="row my-3 justify-content-between">
 
                             <div class="col">
-                                <input class="form-check-input ingredient-checkbox" type="checkbox" name="ingredients[<?= $index ?>][checked]" value="1">
+                                <input class="form-check-input ingredient-checkbox bg-transparent" type="checkbox" name="ingredients[<?= $index ?>][checked]" value="1">
                                 <input type="hidden" name="ingredients[<?= $index ?>][name]" value="<?= $ingredient['ingredient'] ?>">
                                 <label class="form-check-label ms-3" for="ingredient">
                                     <?= $ingredient['ingredient'] ?>
@@ -197,7 +197,7 @@ $info = '';
                 </div>
                 <div class="d-flex justify-content-center my-5">
 
-                    <button type="submit" class="btn p-2 border border-2 rounded-3">Ajouter à la liste de courses</button>
+                    <button type="submit" class="btn p-2 border border-2 rounded-3 ingredientsAddBtn">Ajouter à la liste de courses</button>
 
 
                 </div>
@@ -209,7 +209,7 @@ $info = '';
 
         </div>
     </div>
-    <div>
+    <div class="container">
         <h3 class="mb-3">INSTRUCTIONS</h3>
         <?php
         foreach ($instructions as $instruction) {

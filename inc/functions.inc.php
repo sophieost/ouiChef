@@ -8,12 +8,7 @@ define("RACINE_SITE", "/projet_de_soutenance/ouiChef/"); //
 
 
 // DEBUG
-/**
- * fonction pour afficher un tableau ordonné via var_dump
- *
- * @param [type] $var
- * @return void
- */
+
 
 function debug($var)
 {
@@ -27,13 +22,7 @@ function debug($var)
 
 
 // ALERT
-/**
- * Afficher les messages d'alerte
- *
- * @param string $contenu
- * @param string $class
- * @return void
- */
+
 function alert(string $contenu, string $class)
 {
 
@@ -47,12 +36,7 @@ function alert(string $contenu, string $class)
 
 
 // FONCTION EXPLODE - STRING TO ARRAY
-/**
- * fonction qui transforme une chaine de caractères en array
- *
- * @param string $string
- * @return array
- */
+
 function stringToArray(string $string): array
 {
 
@@ -68,9 +52,7 @@ function logOut()
 
     if (isset($_GET['action']) && !empty($_GET['action']) && $_GET['action'] == 'deconnexion') {
 
-
         unset($_SESSION['user']);
-
 
         header("location:" . RACINE_SITE . "index.php");
     }
@@ -632,7 +614,7 @@ function allIngredients(): array
 {
 
     $pdo = connexionBdd();
-    $sql = "SELECT * FROM ingredients ORDER BY id DESC";
+    $sql = "SELECT * FROM ingredients ORDER BY name ASC";
     $request = $pdo->query($sql);
     $result = $request->fetchAll();
 
@@ -939,7 +921,17 @@ function isRecipeBlacklist(int $userId, int $recipeId): bool
 
 function addMenu(int $user_id, int $jours, int $pers)
 {
+
     $pdo = connexionBdd();
+
+    // suppression les anciens menus pour ne pas surcharger la base de données
+
+    $sqlDelete = "DELETE FROM menus WHERE user_id = :user_id";
+    $stmtDelete = $pdo->prepare($sqlDelete);
+    $stmtDelete->execute([':user_id' => $user_id]);
+
+    // création du nouveau menu
+
     $sql = "INSERT INTO menus (user_id, nb_jours, nb_pers) VALUES (:user_id, :nb_jours, :nb_pers)";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([

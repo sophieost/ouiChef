@@ -182,12 +182,12 @@ require_once "../inc/header.inc.php";
 
                     <div class="col-4">
                         <input type="checkbox" id="ingredient-<?= $ingredient['id'] ?>" class="form-check-input" name="ingredients[<?= $ingredient['id'] ?>][checked]" value="<?= $ingredient['id'] ?>" <?= $isChecked ? 'checked' : '' ?>>
-                        <label for="ingredient-<?= $ingredient['id'] ?>"><?= $ingredient['name'] ?></label>
+                        <label for="ingredient-<?= $ingredient['id'] ?>"><?= ucfirst($ingredient['name'])?></label>
                     </div>
 
 
                     <div class="col-4">
-                        <input type="number" class="form-control" name="ingredients[<?= $ingredient['id'] ?>][quantity]" placeholder="Quantité" value="<?= $quantity ?>">
+                        <input type="number" step="0.01" class="form-control" name="ingredients[<?= $ingredient['id'] ?>][quantity]" placeholder="Quantité" value="<?= $quantity ?>">
                     </div>
 
                     <div class="col-4">

@@ -107,7 +107,7 @@ require_once "../inc/header.inc.php"
 </div>
 
 <?php if (!empty($message)) { ?>
-    <div class="alert alert-danger w-50 mx-auto text-center"><?= $message ?></div>
+    <div class="alert alert-succes w-50 mx-auto text-center"><?= $message ?></div>
 <?php } ?>
 
 

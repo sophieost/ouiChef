@@ -37,57 +37,74 @@ if (isset($_GET['id'])) {
     deleteIngredientFromList($ingredientId);
 }
 
+
 $metadescription = "Gérez votre liste de courses en toute simplicité sur OuiChef. Ajoutez des ingrédients depuis nos recettes, insérez manuellement vos besoins et cochez les articles au fur et à mesure de vos achats.";
 
 $title = "Liste de Courses Interactive - Organisez Vos Achats avec Facilité";
 
 require_once "inc/header.inc.php";
+
 ?>
 
-<div id="containerList">
 
-    <h1>Ma liste de course</h1>
-    <form action="" method="post" id="formList">
-        <div class="d-flex">
-            <input type="text" placeholder="Ajouter un article à la liste" name="name" class="my-auto">
-            <input type="text" placeholder="Ajouter un article à la liste" name="quantity" hidden>
-            <input type="text" placeholder="Ajouter un article à la liste" name="unity" hidden>
+<main>
 
-            <button type="submit" class="btn"><i class="bi bi-plus-circle fs-1 ms-3" id="add-ingredient" class="btn btnList"></i></button>
+    <div id="containerList">
+
+        <h1>Ma liste de course</h1>
+        
+        <div class="d-flex" id="printHide">
+            <form action="" method="post" id="formList">
+                <div class="d-flex">
+                    <input type="text" placeholder="Ajouter un article à la liste" name="name" class="my-auto addIngredientInput">
+                    <input type="text" name="quantity" hidden>
+                    <input type="text" name="unity" hidden>
+
+                    <button type="submit" class="btn"><i class="bi bi-plus-circle fs-1 ms-3" id="add-ingredient" class="btn btnList"></i></button>
+
+
+                </div>
+            </form>
+            <button class="btn" onclick="window.print()"><i class="bi bi-printer fs-1 ms-3"></i></button>
         </div>
-    </form>
 
-    <ul id="shopping-list">
-        <?php
-        $ingredientsList = showList();
-        foreach ($ingredientsList as $ingredientList) {
-        ?>
-            <div class="d-flex align-items-center">
-                <i class="bi bi-square me-5 p-2 fs-2 checklist-item"></i>
-                <li><?= htmlspecialchars($ingredientList['quantity'] ?? '') . ' ' . htmlspecialchars($ingredientList['unity'] ?? '') . ' ' . htmlspecialchars($ingredientList['name'] ?? '') ?></li>
-                <a href="liste.php?id=<?= $ingredientList['id'] ?>"><i class="bi bi-x-lg ms-3 p-2 fs-3"></i></a>
-            </div>
-        <?php
-        }
-        ?>
-    </ul>
-</div>
+
+        <ul id="shopping-list" class="mb-5">
+            <?php
+            $ingredientsList = showList();
+            foreach ($ingredientsList as $ingredientList) {
+            ?>
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-square me-5 p-2 fs-2 checklist-item"></i>
+                    <li class="list-item"><?= htmlspecialchars($ingredientList['quantity'] ?? '') . ' ' . htmlspecialchars($ingredientList['unity'] ?? '') . ' ' . htmlspecialchars($ingredientList['name'] ?? '') ?></li>
+                    <a href="liste.php?id=<?= $ingredientList['id'] ?>"><i class="bi bi-x-lg ms-3 p-2 fs-3"></i></a>
+                </div>
+            <?php
+            }
+            ?>
+        </ul>
+    </div>
+
+</main>
+
 
 
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         let checklistItems = document.querySelectorAll('.checklist-item');
+
         checklistItems.forEach(function(checkListItem) {
             checkListItem.addEventListener('click', function() {
                 // Utilisez 'classList.toggle' pour basculer entre les classes
                 this.classList.toggle('bi-square');
                 this.classList.toggle('bi-check2-square');
+
+                let listItem = this.nextElementSibling;
+                listItem.style.textDecoration = this.classList.contains('bi-check2-square') ? 'line-through' : 'none';
             });
         });
     });
-
-
 
     // document.addEventListener('DOMContentLoaded', function() {
     //     displayShoppingList();

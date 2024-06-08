@@ -47,6 +47,7 @@ input[type="checkbox"]:checked {
     color: var(--orange);
 }
 
+
 /* NAVBAR */
 
 nav {
@@ -54,7 +55,8 @@ nav {
     background-color: var(--orange);
     font-family: "Poppins", sans-serif;
     font-size: large;
-    box-shadow: 0px 0px 15px -1px rgba(0,0,0,0.27);
+    box-shadow: 0px 0px 15px -1px rgba(0, 0, 0, 0.27);
+    transition: top 0.3s ease-in-out;
 
     a {
         color: white !important;
@@ -115,7 +117,7 @@ nav {
         position: relative;
         border-radius: 20px;
         border: none;
-        box-shadow: 0px 0px 15px -1px rgba(0,0,0,0.27);
+        box-shadow: 0px 0px 15px -1px rgba(0, 0, 0, 0.27);
 
 
         .days {
@@ -231,7 +233,8 @@ nav {
 
 
         .btnOptions {
-            box-shadow: 0px 0px 15px -1px rgba(0,0,0,0.15);
+            box-shadow: 0px 0px 15px -1px rgba(0, 0, 0, 0.15);
+
             &:hover {
                 background-color: rgba(255, 255, 255, 0.562) !important;
                 border: 1px solid var(--black);
@@ -253,7 +256,7 @@ nav {
                 transition: 0.5s;
                 background-color: #E7F1EF;
                 cursor: pointer;
-                box-shadow: 0px 0px 15px -1px rgba(0,0,0,0.15);
+                box-shadow: 0px 0px 15px -1px rgba(0, 0, 0, 0.15);
             }
 
             input[type=checkbox]:checked+.label {
@@ -266,7 +269,8 @@ nav {
             display: block;
         }
 
-        input[type="submit"], .btnRedirection {
+        input[type="submit"],
+        .btnRedirection {
             background-color: var(--orange);
             color: white;
             border: none;
@@ -277,7 +281,7 @@ nav {
             left: 50%;
             transform: translateX(-50%);
             margin-bottom: -20px;
-            box-shadow: 0px 0px 15px -1px rgba(0,0,0,0.27);
+            box-shadow: 0px 0px 15px -1px rgba(0, 0, 0, 0.27);
 
             &:hover {
                 zoom: 1.2;
@@ -413,11 +417,6 @@ nav {
 
 #users {
 
-    button:hover {
-        background-color: #add6cfae;
-        color: white;
-    }
-
     th,
     tr,
     td {
@@ -448,6 +447,16 @@ nav {
 #categoriesTable,
 #ingredientsTable {
 
+    .btn:hover {
+        background-color: var(--orange);
+        color: white !important;
+        border: none;
+
+        a {
+            color: white;
+        }
+    }
+
     .bi-pen-fill {
         color: #2e2e2ec2;
     }
@@ -458,14 +467,20 @@ nav {
 
 }
 
+
 .btnAdd {
     background-color: white;
     color: var(--black);
     border: none;
 
     &:hover {
-        background-color: var(--yellow);
-        color: var(--black);
+        background-color: var(--orange);
+        color: white !important;
+        border: none;
+
+        a {
+            color: white;
+        }
     }
 }
 
@@ -524,6 +539,7 @@ nav {
             padding: 10px 20px;
             text-align: center;
             border-radius: 5px;
+            color: var(--white);
 
             &:hover {
                 transform: scale(1.05);
@@ -664,19 +680,25 @@ nav {
     /* border-radius: 50px; */
     margin-top: 10vh;
 
+
+
     .iconFav:hover {
         color: var(--orange) !important;
     }
 
+    .ingredientsAddBtn:hover {
+        background-color: var(--blue);
+    }
+
 
     @media screen and (max-width: 650px) {
-        
-        ul{
+
+        ul {
             flex-direction: column;
         }
 
-        .titleResponsive{
-        justify-content: center !important;    
+        .titleResponsive {
+            justify-content: center !important;
         }
 
     }
@@ -738,7 +760,7 @@ nav {
 
     form input::placeholder {
         color: var(--white);
-        font-size: small;
+        font-size: 1rem;
         font-style: italic;
 
     }
@@ -747,12 +769,18 @@ nav {
         border: 3px solid var(--white);
     }
 
-    ul li {
-        color: var(--black);
-        list-style: none;
-        font-size: 1.2rem;
-        cursor: pointer;
+    ul {
+
+        padding: 0;
+
+        li {
+            color: var(--black);
+            list-style: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
     }
+
 
     .btnList {
         width: 250px;
@@ -769,36 +797,53 @@ nav {
 
     }
 
-    
+}
+
+@media print {
+    header,
+    footer * {
+        display: none;
+    }
+    #printHide{
+        visibility: hidden;
+    }
+    #shopping-list,
+    #shopping-list * {
+        display: block;
+    }
 
 }
+
+
 @media screen and (max-width: 994px) {
-        #containerList {
+    #containerList {
 
-            background-image: url(../img/liste.jpg);
-            background-size: 150%;
-            height: 50vh;
-        }
-
+        background-image: url(../img/liste.jpg);
+        background-size: 150%;
+        height: 50vh;
     }
+
+}
+
 @media screen and (max-width: 650px) {
-        #containerList {
+    #containerList {
 
-            background-image: url(../img/liste.jpg);
-            background-size: 180%;
-            height: 30vh;
-        }
-
+        background-image: url(../img/liste.jpg);
+        background-size: 180%;
+        height: 30vh;
     }
+
+}
+
 @media screen and (max-width: 490px) {
-        #containerList {
+    #containerList {
 
-            background-image: url(../img/liste.jpg);
-            background-size: 230%;
-            height: 20vh;
-        }
-
+        background-image: url(../img/liste.jpg);
+        background-size: 230%;
+        height: 20vh;
     }
+
+}
 
 
 /* FOOTER */

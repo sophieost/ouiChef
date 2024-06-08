@@ -55,7 +55,7 @@ require_once "inc/header.inc.php";
 <main id="menus">
 
     <div class="d-flex justify-content-between menuHeader p-5">
-        <h2 class="ms-md-5">Mon menu</h2>
+        <h1 class="ms-md-5">Mon menu</h1>
         <button class="btn me-md-5"><a href="<?= RACINE_SITE ?>liste.php">Voir ma liste de courses</a></button>
     </div>
 

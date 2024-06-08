@@ -24,6 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $categories = isset($_POST['categories']) ? $_POST['categories'] : [];
 
     $menu_id = addMenu($_SESSION['user']['id'], $nb_jours, $nb_pers);
+    
     $userId = $_SESSION['user']['id'];
     $entrees = getRecipesByType('entree', $userId, $season, $price, $time, $categories, $nb_jours);
     $plats = getRecipesByType('plat', $userId, $season, $price, $time, $categories, $nb_jours);
@@ -189,7 +190,7 @@ require_once "inc/header.inc.php";
             <li>Du nombre de personnes.</li>
             <li>De vos préférences.</li>
         </ul>
-        <p class="m-5">Ensuite vous pourrez affiner les menus en modifiant un plat qui ne vous plairait pas. Vous pourrez également liker les plats qui vous ont plu ou écarter les plats qui ne vous plaisent pas. Les recettes likées seront conservées dans votre librairie.</p>
+        <p class="m-5">Vous pourrez également liker les plats qui vous ont plu ou écarter les plats qui ne vous plaisent pas. Les recettes likées seront conservées dans votre librairie et les recettes blacklistées seront écartées de vos futurs menus.</p>
     </section>
 
 

@@ -23,8 +23,8 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
         $info = alert("Recette retirée", "success");
     }
 }
+$metadescription = "Explorez et gérez vos recettes préférées sur OuiChef ! Créez votre collection personnelle de délices culinaires et ajustez votre blacklist pour une expérience gastronomique sur mesure.";
 
-$metadescription = "Consultez et organisez vos recettes préférées et celles bloquées sur OuiChef. Accédez facilement à vos coups de cœur culinaires et gérez votre liste de recettes à éviter.";
 
 $title = 'Vos Favoris et Blacklist - Gérez Vos Recettes sur OuiChef';
 
@@ -37,7 +37,7 @@ echo $info;
 
 <section>
 
-    <div class="bg-white userFav pt-5">
+    <div class="bg-white userFav py-5">
         <h2 class="text-center mb-5">Mes recettes préférées</h2>
         <ul>
 
@@ -67,7 +67,7 @@ echo $info;
         </ul>
     </div>
 
-    <div class="mt-3 bg-white userFav pt-5">
+    <div class="mt-3 bg-white userFav py-5">
 
         <h2 class="text-center mb-5">Mes recettes blacklistées</h2>
 
